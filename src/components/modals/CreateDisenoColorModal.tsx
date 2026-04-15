@@ -61,8 +61,8 @@ const CreateDisenoColorModal = ({ isOpen, onClose, onSuccess, subcategoriaId }: 
       await createDisenoColor({
         diseno_id:  Number(form.diseno_id),
         color_id:   Number(form.color_id),
-        precio:     Number(form.precio),
-        sku:        form.sku,
+       
+      
       })
       setForm(EMPTY)
       onSuccess()

@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
     ChevronRight, ImageOff, Plus, Pencil,
-    Trash2, X, Check,
+     X, Check,
 } from 'lucide-react'
-import { getDisenoById, updateDiseno, deleteDiseno } from '../../api/disenos.api'
+import { getDisenoById, updateDiseno } from '../../api/disenos.api'
 import { getDisenoColorsByDiseno, deleteDisenoColor } from '../../api/disenoColor.api'
 import type { Diseno, DisenoColor } from '../../types/diseno.types'
 import AddColorModal from '../../components/modals/AddColorModal'
@@ -21,8 +21,8 @@ const DisenoDetalle = () => {
     const [editando, setEditando] = useState(false)
     const [form, setForm] = useState({ nombre: '', descripcion: '', codigo: '', precio: '' })
     const [saving, setSaving] = useState(false)
-    const [confirmDelete, setConfirmDelete] = useState(false)
-    const [deleting, setDeleting] = useState(false)
+  
+ 
 
     const fetchData = async () => {
         try {
@@ -63,16 +63,7 @@ const DisenoDetalle = () => {
         }
     }
 
-    const handleDelete = async () => {
-        if (!diseno) return
-        try {
-            setDeleting(true)
-            await deleteDiseno(diseno.id)
-            navigate(`/productos/${productoId}/${categoriaId}/${subcategoriaId}`)
-        } finally {
-            setDeleting(false)
-        }
-    }
+
 
     const handleRemoveColor = async (dcId: number) => {
         await deleteDisenoColor(dcId)

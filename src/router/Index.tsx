@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import Layout from '../components/Layout'
-import ProtectedRoute from '../components/ProtectedRoute'
+
 import Dashboard from '../pages/Dashboard'
 import Productos from '../pages/Productos'
 import Disenos from '../pages/Disenos'
@@ -24,7 +24,7 @@ import VentaDetalle from '../pages/ventas/DetalleVenta'
 export const router = createBrowserRouter([
     {
         path: '/',
-        element: <ProtectedRoute />,
+        
         children: [
             {
                 element: <Layout />,
@@ -48,7 +48,8 @@ export const router = createBrowserRouter([
                     { path: 'clientes/:clienteId', element: <ClienteDetalle /> },
                     { path: 'clientes/:clienteId/disenos/:disenoId', element: <ClienteDisenoDetalle /> },
                     { path: 'ventas/nueva', element: <NuevaVenta /> },
-                    { path: 'ventas/:ventaId', element: <VentaDetalle /> }
+                    { path: 'ventas/:ventaId', element: <VentaDetalle /> },
+                    {path: 'login', element: <Dashboard />}
                 ],
             },
         ],

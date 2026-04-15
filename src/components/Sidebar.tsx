@@ -1,7 +1,7 @@
 import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard, Package, Palette, Store, ArrowLeftRight,
-  DollarSign, User, Users, ScrollText, ChevronLeft, ChevronRight, X
+  DollarSign, User, Users,  ChevronLeft, ChevronRight, X
 } from 'lucide-react'
 
 const navItems = [

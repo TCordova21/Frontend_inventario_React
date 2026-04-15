@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Plus, Package, ChevronRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { getProductos, createProducto } from '../api/producto.api'
-import type { Producto, CreateProductoDto } from '../types/producto.types'
+import { getProductos } from '../api/producto.api'
+import type { Producto} from '../types/producto.types'
 import CreateProductoModal from '../components/modals/CreateProductoModal'
 import LoadingScreen from '../components/LoadingScreen'
 

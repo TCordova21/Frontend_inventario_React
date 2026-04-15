@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, Search, ShoppingCart, Package } from 'lucide-react'
+import { Plus, Search, ShoppingCart } from 'lucide-react'
 import { getVentas } from '../api/venta.api'
 import type { Venta } from '../types/venta.types'
 import LoadingScreen from '../components/LoadingScreen'

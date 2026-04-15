@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 import { X, ImageOff } from 'lucide-react'
 import { createDiseno } from '../../api/disenos.api'
-import { getSubcategorias } from '../../api/disenos.api'
-import type { CreateDisenoDto, Diseno, Subcategoria } from '../../types/diseno.types'
+import type { CreateDisenoDto, Diseno } from '../../types/diseno.types'
 
 interface Props {
   isOpen: boolean
@@ -22,7 +21,6 @@ const EMPTY_FORM: CreateDisenoDto = {
 
 const CreateDisenoModal = ({ isOpen, onClose, onSuccess, subcategoriaId }: Props) => {
   const [form, setForm] = useState<CreateDisenoDto>(EMPTY_FORM)
-  const [subcategorias, setSubcategorias] = useState<Subcategoria[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [imgError, setImgError] = useState(false)
