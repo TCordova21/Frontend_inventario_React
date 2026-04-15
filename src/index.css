@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  color: #151515;
+}
+
+.letters-gray,
+.letters-red {
+  font-size: 50px;
+  font-weight: 700;
+  font-family: 'Waterfall';
+  line-height: 1;
+  user-select: none;
+}
+
+.letters-gray { color: #d1d5db; display: block; }
+
+.letters-red {
+  color: #399fff;
+  position: absolute;
+  top: 0; left: 0;
+  white-space: nowrap;
+  clip-path: inset(0 100% 0 0);
+  animation: sweep 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes sweep {
+  0%   { clip-path: inset(0 100% 0 0); }
+  45%  { clip-path: inset(0 0% 0 0);   }
+  55%  { clip-path: inset(0 0% 0 0);   }
+  100% { clip-path: inset(0 0% 0 100%); }
+}
+
+.tagline {
+  font-family: 'Waterfall';
+  font-size: 16px;
+  color: #399fff;
+  animation: fade-pulse 2s ease-in-out infinite;
+}
+
+@keyframes fade-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
