@@ -84,27 +84,27 @@ const Usuarios = () => {
             {/* Métricas */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
-                    <p className="text-xs text-gray-400 mb-1 font-bold uppercase tracking-wider">Total</p>
+                    <p className="text-xs text-gray-400 mb-1 font-medium ">Total</p>
                     <p className="text-2xl font-semibold text-gray-800">{totalUsuarios}</p>
                 </div>
                 <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
                     <div className="flex items-center gap-1.5 mb-1">
                         <UserCheck size={14} className="text-green-500" />
-                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Activos</p>
+                        <p className="text-xs text-gray-400 font-medium  ">Activos</p>
                     </div>
                     <p className="text-2xl font-semibold text-green-600">{activos}</p>
                 </div>
                 <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
                     <div className="flex items-center gap-1.5 mb-1">
                         <UserMinus size={14} className="text-red-400" />
-                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Inactivos</p>
+                        <p className="text-xs text-gray-400 font-medium  ">Inactivos</p>
                     </div>
                     <p className="text-2xl font-semibold text-red-500">{inactivos}</p>
                 </div>
                 <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
                     <div className="flex items-center gap-1.5 mb-1">
                         <ShieldCheck size={14} className="text-blue-500" />
-                        <p className="text-xs text-gray-400 font-bold uppercase tracking-wider">Admins</p>
+                        <p className="text-xs text-gray-400 font-medium  ">Admins</p>
                     </div>
                     <p className="text-2xl font-semibold text-blue-600">{administradores}</p>
                 </div>
@@ -145,32 +145,32 @@ const Usuarios = () => {
                         ) : (
                             filtrados.map((u) => (
                                 <tr key={u.id} className={`hover:bg-gray-50/50 transition-colors ${!u.activo ? 'bg-gray-50/30' : ''}`}>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">
+                                    <td className="px-6 py-2  text-[12px] truncate text-gray-600">
                                         <div className="flex items-center gap-3">
                                            
                                             {u.nombre}
                                         </div>
                                     </td>
-                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-700">
+                                     <td className="px-6 py-2 text-[12px] truncate text-gray-600">
                                         <div className="flex items-center gap-3">
                                            
                                             {u.apellido}
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-gray-500">{u.email}</td>
-                                    <td className="px-6 py-4">
-                                        <span className="text-xs font-medium px-2.5 py-1 rounded-lg bg-gray-100 text-gray-600 border border-gray-200">
+                                    <td className="px-6 py-2 text-[12px] truncate text-gray-500">{u.email}</td>
+                                    <td className="px-6 py-2">
+                                        <span className="text-[10px] font-medium px-2.5 py-1 rounded-md bg-gray-100 text-gray-600 border border-gray-200">
                                             {u.roles?.nombre || 'Sin Rol'}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 ">
-                                        <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-md ${
-                                            u.activo ? 'bg-green-100 text-green-700 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200'
+                                    <td className="px-6 py-2 ">
+                                        <span className={`text-[10px] font-medium uppercase px-2 py-1 rounded-md ${
+                                            u.activo ? 'bg-green-100 text-green-600 border border-green-200' : 'bg-red-100 text-red-700 border border-red-200'
                                         }`}>
                                             {u.activo ? 'Activo' : 'Inactivo'}
                                         </span>
                                     </td>
-                                    <td className="px-6 py-4 text-right">
+                                    <td className="px-6 py-2 text-right">
                                         <div className="flex justify-end gap-2">
                                             <button 
                                                 onClick={() => openEditModal(u)}

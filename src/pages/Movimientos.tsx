@@ -302,7 +302,7 @@ const Movimientos = () => {
                     <div className="flex flex-col items-center">
                       <span className="text-sm font-bold text-gray-800">{m.cantidad}</span>
                       {m.cantidad_confirmada !== null && (
-                        <span className={`text-[10px] font-semibold px-1 rounded ${m.tipo_movimiento === 'AJUSTE'
+                        <span className={`text-[10px] font-medium px-1.5 rounded ${m.tipo_movimiento === 'AJUSTE'
                           ? 'bg-gray-100 text-gray-600'
                           : (m.cantidad_confirmada !== m.cantidad ? 'bg-red-100 text-red-600' : 'bg-green-100 text-green-600')
                           }`}>

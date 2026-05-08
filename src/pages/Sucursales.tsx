@@ -131,7 +131,7 @@ const Sucursales = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-2xl font-semibold text-gray-800 flex items-center gap-2">
-            <Store className="text-blue-600" size={24} />
+           
             Sucursales
           </h1>
           <p className="text-sm text-gray-400 mt-0.5">{filtrados.length} locales registrados</p>

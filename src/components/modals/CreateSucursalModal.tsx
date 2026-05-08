@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import { X,  UserCheck} from 'lucide-react'
+import { X, UserCheck } from 'lucide-react'
 import { createSucursal, updateSucursal } from '../../api/sucursal.api'
-import { getUsuarios } from '../../api/usuarios.api' 
+import { getUsuarios } from '../../api/usuarios.api'
 
 interface Props {
   isOpen: boolean;
@@ -39,17 +39,17 @@ const CreateSucursalModal = ({ isOpen, onClose, onSuccess, sucursalToEdit, sucur
         const vendedoresFiltrados = usuariosBrutos.filter((u: any) => {
           const esVendedorActivo = Number(u.rol_id) === 2 && u.activo;
           const userId = Number(u.id);
-          
+
           // Lógica de exclusión
           const estaOcupado = idsOcupados.includes(userId);
-          
+
           // Si estamos editando, el que ya está asignado a ESTA sucursal debe ser visible
           const esElResponsableDeEstaEdicion = sucursalToEdit && Number(sucursalToEdit.usuario_id) === userId;
 
           if (esElResponsableDeEstaEdicion) return true;
           return esVendedorActivo && !estaOcupado;
         });
-        
+
         setVendedores(vendedoresFiltrados)
       })
 
@@ -73,10 +73,10 @@ const CreateSucursalModal = ({ isOpen, onClose, onSuccess, sucursalToEdit, sucur
     e.preventDefault()
     setSaving(true)
     try {
-      const payload = { 
-        ...form, 
-        usuario_id: (form.tipo !== 'MATRIZ' && form.usuario_id) ? Number(form.usuario_id) : undefined, 
-        activo: true 
+      const payload = {
+        ...form,
+        usuario_id: (form.tipo !== 'MATRIZ' && form.usuario_id) ? Number(form.usuario_id) : undefined,
+        activo: true
       }
       if (sucursalToEdit) {
         await updateSucursal(sucursalToEdit.id, payload)
@@ -97,7 +97,7 @@ const CreateSucursalModal = ({ isOpen, onClose, onSuccess, sucursalToEdit, sucur
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden" onClick={e => e.stopPropagation()}>
         <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
           <h2 className="font-semibold text-gray-800 flex items-center gap-2">
-          
+
             {sucursalToEdit ? 'Editar Sucursal' : 'Nueva Sucursal'}
           </h2>
           <button onClick={onClose} className="p-1 hover:bg-gray-200 rounded-full transition-colors">
@@ -113,16 +113,20 @@ const CreateSucursalModal = ({ isOpen, onClose, onSuccess, sucursalToEdit, sucur
               required
               className="w-full px-3 py-2 rounded-lg border border-gray-200 outline-none text-sm focus:ring-2 focus:ring-blue-500/20"
               value={form.nombre}
-              onChange={e => setForm({...form, nombre: e.target.value})}
+              onChange={e => setForm({ ...form, nombre: e.target.value })}
             />
           </div>
 
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-gray-700">Tipo</label>
             <select
-              className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white"
+              disabled={!!sucursalToEdit}
+              className={`w-full px-3 py-2 rounded-lg border text-sm transition-all ${sucursalToEdit
+                  ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                  : 'bg-white border-gray-200'
+                }`}
               value={form.tipo}
-              onChange={e => setForm({...form, tipo: e.target.value})}
+              onChange={e => setForm({ ...form, tipo: e.target.value })}
             >
               <option value="LOCAL">Local</option>
               <option value="MATRIZ">Matriz</option>
@@ -134,7 +138,7 @@ const CreateSucursalModal = ({ isOpen, onClose, onSuccess, sucursalToEdit, sucur
             <input
               className="w-full px-3 py-2 rounded-lg border border-gray-200 outline-none text-sm"
               value={form.direccion}
-              onChange={e => setForm({...form, direccion: e.target.value})}
+              onChange={e => setForm({ ...form, direccion: e.target.value })}
             />
           </div>
 
@@ -147,7 +151,7 @@ const CreateSucursalModal = ({ isOpen, onClose, onSuccess, sucursalToEdit, sucur
                 required
                 className="w-full px-3 py-2 rounded-lg border border-gray-200 text-sm bg-white"
                 value={form.usuario_id}
-                onChange={e => setForm({...form, usuario_id: e.target.value})}
+                onChange={e => setForm({ ...form, usuario_id: e.target.value })}
               >
                 <option value="">Seleccionar un vendedor...</option>
                 {vendedores.map(v => (

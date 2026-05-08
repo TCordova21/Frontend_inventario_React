@@ -81,16 +81,16 @@ const DetalleVenta = () => {
           {sePuedeDevolver && (
             <button 
               onClick={() => setConfirmOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-200 rounded-xl text-sm font-medium text-amber-600 hover:bg-amber-100 transition-all shadow-sm active:scale-95"
+              className="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-200 rounded-xl text-sm font-medium text-amber-600 hover:bg-amber-100 transition-all  active:scale-95"
             >
               <RotateCcw size={14} strokeWidth={3} /> Procesar Devolución
             </button>
           )}
           <button 
             onClick={() => window.print()}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all shadow-sm"
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all "
           >
-            <Printer size={14} /> Imprimir Comprobante
+            <Printer size={14} /> Imprimir 
           </button>
         </div>
       </div>
@@ -98,7 +98,7 @@ const DetalleVenta = () => {
       {/* Métricas de la Venta */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Estado</p>
+          <p className="text-[10px] font-semibold text-gray-400 tracking-wider mb-1">Estado</p>
           {esCancelada && (
             <span className="text-sm font-semibold text-red-500 flex items-center gap-1">
               <XCircle size={14} /> ANULADA
@@ -110,22 +110,22 @@ const DetalleVenta = () => {
             </span>
           )}
           {venta.estado === 'COMPLETADA' && (
-            <span className="text-sm font-semibold text-green-500 flex items-center gap-1">
+            <span className="text-sm font-semibold text-green-600 flex items-center gap-1">
               <CheckCircle2 size={14} /> COMPLETADA
             </span>
           )}
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Fecha de Venta</p>
-          <p className="text-sm font-semibold text-gray-700">{new Date(venta.fecha).toLocaleDateString()}</p>
+          <p className="text-[10px] font-semibold text-gray-400  tracking-wider mb-1">Fecha de Venta</p>
+          <p className="text-sm font-semibold text-gray-600">{new Date(venta.fecha).toLocaleDateString()}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Sucursal</p>
-          <p className="text-sm font-semibold text-gray-700">{venta.sucursales?.nombre}</p>
+          <p className="text-[10px] font-semibold text-gray-400  tracking-wider mb-1">Sucursal</p>
+          <p className="text-sm font-semibold text-gray-600">{venta.sucursales?.nombre}</p>
         </div>
         <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Total Cobrado</p>
-          <p className="text-xl font-bold text-gray-800">${Number(venta.total).toFixed(2)}</p>
+          <p className="text-[10px] font-semibold text-gray-400 tracking-wider mb-1">Total Cobrado</p>
+          <p className="text-xl font-bold text-gray-600">${Number(venta.total).toFixed(2)}</p>
         </div>
       </div>
 
