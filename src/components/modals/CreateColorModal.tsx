@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 import { createColor, updateColor } from '../../api/colores.api' // Asumiendo que existe updateColor
 import type { Color, CreateColorDto } from '../../types/color.types'
+import {toast} from 'react-toastify'
 
 interface Props {
   isOpen: boolean
@@ -48,8 +49,11 @@ const CreateColorModal = ({ isOpen, onClose, onSuccess, colorToEdit }: Props) =>
       
       onSuccess()
       onClose()
+      toast.success('Se ha creado el color correctamente')
+
     } catch (err) {
       setError(colorToEdit ? 'Error al actualizar el color' : 'Error al crear el color')
+      toast.error('Error al crear el color')
     } finally {
       setLoading(false)
     }

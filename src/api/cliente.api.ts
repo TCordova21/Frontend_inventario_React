@@ -39,12 +39,20 @@ export const getDisenosByCliente = async (clienteId: number): Promise<ClienteDis
   return data
 }
 
-// 🔹 ASIGNAR DISEÑO
-export const assignDisenoToCliente = async (dto: {
-  diseno_id: number
-  cliente_id: number
-  exclusivo: boolean
-}): Promise<ClienteDiseno> => {
-  const { data } = await api.post<ClienteDiseno>('/clientes/assign-diseno', dto)
-  return data
-}
+// En tu archivo de servicios del frontend:
+
+export const unassignDiseno = async (clienteId: number, disenoId: number) => {
+  const { data } = await api.delete(`/clientes/${clienteId}/disenos/${disenoId}`);
+  return data;
+  
+};
+
+// Al asignar, ahora puedes pasar el campo exclusivo si lo deseas
+export const assignDiseno = async (clienteId: number, disenoId: number, exclusivo: boolean = false) => {
+  const { data } = await api.post(`/clientes/assign-diseno`, {
+    cliente_id: clienteId,
+    diseno_id: disenoId,
+    exclusivo
+  });
+  return data;
+};

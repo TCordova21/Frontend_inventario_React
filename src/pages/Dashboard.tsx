@@ -68,8 +68,8 @@ const Dashboard = () => {
       {/* Header con saludo */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-5">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Panel de Control</h1>
-          <p className="text-sm text-gray-500">Resumen operativo — Matriz Otavalo</p>
+          <h1 className="text-2xl font-semibold text-gray-800 tracking-tight">Dashboard</h1>
+          <p className="text-sm text-gray-400 mt-0.5">Resumen operativo</p>
         </div>
         
       </div>

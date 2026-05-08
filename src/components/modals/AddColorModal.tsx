@@ -3,6 +3,7 @@ import { X } from 'lucide-react'
 import { getColores } from '../../api/colores.api'
 import { createDisenoColor } from '../../api/disenoColor.api'
 import type { Color } from '../../types/color.types'
+import {toast} from 'react-toastify'
 
 interface Props {
   isOpen: boolean
@@ -42,8 +43,9 @@ const AddColorModal = ({ isOpen, onClose, onSuccess, disenoId, coloresAsignados 
       await createDisenoColor({ diseno_id: disenoId, color_id: selectedId, descripcion })
       onSuccess()
       onClose()
+      toast.success('Se asigno el color correctamente')
     } catch {
-      setError('Error al añadir el color. Puede que ya esté asignado.')
+      toast.error('Error al añadir el color. Puede que ya esté asignado.')
     } finally {
       setSaving(false)
     }

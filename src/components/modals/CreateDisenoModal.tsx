@@ -7,7 +7,7 @@ interface Props {
   isOpen: boolean
   onClose: () => void
   onSuccess: (diseno: Diseno) => void  // ← ahora devuelve el diseño
-  subcategoriaId?: number              // ← preselecciona la subcategoría
+  nodoId?: number              // ← preselecciona la subcategoría
 }
 
 
@@ -16,20 +16,21 @@ const EMPTY_FORM: CreateDisenoDto = {
   imagen: '',
   descripcion: '',
   codigo: '',
-  subcategoria_id: 0,
+  nodo_id: 0,
+
 }
 
-const CreateDisenoModal = ({ isOpen, onClose, onSuccess, subcategoriaId }: Props) => {
+const CreateDisenoModal = ({ isOpen, onClose, onSuccess, nodoId }: Props) => {
   const [form, setForm] = useState<CreateDisenoDto>(EMPTY_FORM)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [imgError, setImgError] = useState(false)
 
   useEffect(() => {
-  if (subcategoriaId) {
-    setForm((prev) => ({ ...prev, subcategoria_id: subcategoriaId }))
+  if (nodoId) {
+    setForm((prev) => ({ ...prev, nodo_id: nodoId }))
   }
-}, [subcategoriaId, isOpen])
+}, [nodoId, isOpen])
 
 
   if (!isOpen) return null
@@ -46,12 +47,12 @@ const handleSubmit = async (e: React.FormEvent) => {
   e.preventDefault()
   if (!form.nombre?.trim()) return setError('El nombre es obligatorio')
   if (!form.codigo?.trim()) return setError('El código es obligatorio')
-  if (!form.subcategoria_id) return setError('Selecciona una subcategoría')
+  if (!form.nodo_id) return setError('Selecciona una subcategoría')
   try {
     setLoading(true)
     const disenoCreado = await createDiseno({
       ...form,
-      subcategoria_id: Number(form.subcategoria_id),
+      nodo_id: Number(form.nodo_id),
     })
     setForm(EMPTY_FORM)
     onSuccess(disenoCreado)  // ← pasa el objeto completo

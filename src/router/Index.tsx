@@ -1,6 +1,10 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom'
+import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom'
 import Layout from '../components/Layout'
+import ProtectedRoute from '../components/ProtectedRoute'
+import { AuthProvider } from '../context/AuthContext'
+import RoleGuard from '../components/RoleGuard'
 
+import Login from '../pages/Login'
 import Dashboard from '../pages/Dashboard'
 import Productos from '../pages/Productos'
 import Disenos from '../pages/Disenos'
@@ -20,39 +24,243 @@ import ClienteDetalle from '../pages/clientes/ClienteDetalle'
 import ClienteDisenoDetalle from '../pages/clientes/ClienteDisenoDetalle'
 import NuevaVenta from '../pages/ventas/NuevaVenta'
 import VentaDetalle from '../pages/ventas/DetalleVenta'
+import NodoDetalle from '../pages/productos/NodoDetalle'
+import Sucursales from '../pages/Sucursales'
+
+
+const Root = () => <Outlet />
 
 export const router = createBrowserRouter([
-    {
+  {
+    element: <Root />,
+    children: [
+      // Ruta pública — sin sidebar, sin protección
+      {
+        path: '/login',
+        element: <Login />,
+      },
+
+      // Rutas protegidas — con sidebar
+      {
         path: '/',
-        
+        element: <ProtectedRoute />,
         children: [
-            {
-                element: <Layout />,
+          {
+            element: <Layout />,
+            children: [
+
+              { index: true, element: <Navigate to="/dashboard" replace /> },
+
+              // 🔵 DASHBOARD
+              {
+                path: 'dashboard',
+                element: (
+                  <RoleGuard routeKey="dashboard">
+                    <Dashboard />
+                  </RoleGuard>
+                ),
+              },
+
+              // 📦 PRODUCTOS
+              {
+                path: 'productos',
                 children: [
-                    { index: true, element: <Navigate to="/dashboard" replace /> },
-                    { path: 'dashboard', element: <Dashboard /> },
-                    { path: 'productos', element: <Productos /> },
-                    { path: 'disenos', element: <Disenos /> },
-                    { path: 'colores', element: <Colores /> },
-                    { path: 'inventario', element: <Inventario /> },
-                    { path: 'movimientos', element: <Movimientos /> },
-                    { path: 'ventas', element: <Ventas /> },
-                    { path: 'clientes', element: <Clientes /> },
-                    { path: 'usuarios', element: <Usuarios /> },
-                    { path: 'auditoria', element: <Auditoria /> },
-                    { path: 'productos', element: <Productos /> },
-                    { path: 'productos/:productoId', element: <ProductoDetalle /> },
-                    { path: 'productos/:productoId/:categoriaId', element: <CategoriaDetalle /> },
-                    { path: 'productos/:productoId/:categoriaId/:subcategoriaId', element: <SubcategoriaDetalle /> },
-                    { path: 'productos/:productoId/:categoriaId/:subcategoriaId/:disenoId', element: <DisenoDetalle /> },
-                    { path: 'clientes/:clienteId', element: <ClienteDetalle /> },
-                    { path: 'clientes/:clienteId/disenos/:disenoId', element: <ClienteDisenoDetalle /> },
-                    { path: 'ventas/nueva', element: <NuevaVenta /> },
-                    { path: 'ventas/:ventaId', element: <VentaDetalle /> },
-                    {path: 'login', element: <Dashboard />}
+                  {
+                    index: true,
+                    element: (
+                      <RoleGuard routeKey="productos">
+                        <Productos />
+                      </RoleGuard>
+                    ),
+                  },
+                  {
+                    path: ':productoId',
+                    element: (
+                      <RoleGuard routeKey="productos">
+                        <ProductoDetalle />
+                      </RoleGuard>
+                    ),
+                  },
+                  {
+                    path: ':productoId/:categoriaId',
+                    element: (
+                      <RoleGuard routeKey="productos">
+                        <CategoriaDetalle />
+                      </RoleGuard>
+                    ),
+                  },
+                  {
+                    path: ':productoId/:categoriaId/:subcategoriaId',
+                    element: (
+                      <RoleGuard routeKey="productos">
+                        <SubcategoriaDetalle />
+                      </RoleGuard>
+                    ),
+                  },
                 ],
-            },
+              },
+
+              // 🎨 DISEÑOS
+              {
+                path: 'disenos',
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <RoleGuard routeKey="disenos">
+                        <Disenos />
+                      </RoleGuard>
+                    ),
+                  },
+                  {
+                    path: ':disenoId',
+                    element: (
+                      <RoleGuard routeKey="disenos">
+                        <DisenoDetalle />
+                      </RoleGuard>
+                    ),
+                  },
+                ],
+              },
+
+              // 🎨 COLORES
+              {
+                path: 'colores',
+                element: (
+                  <RoleGuard routeKey="colores">
+                    <Colores />
+                  </RoleGuard>
+                ),
+              },
+
+              // 📦 INVENTARIO
+              {
+                path: 'inventario',
+                element: (
+                  <RoleGuard routeKey="inventario">
+                    <Inventario />
+                  </RoleGuard>
+                ),
+              },
+
+              // 🔁 MOVIMIENTOS
+              {
+                path: 'movimientos',
+                element: (
+                  <RoleGuard routeKey="movimientos">
+                    <Movimientos />
+                  </RoleGuard>
+                ),
+              },
+
+              // 💰 VENTAS
+              {
+                path: 'ventas',
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <RoleGuard routeKey="ventas">
+                        <Ventas />
+                      </RoleGuard>
+                    ),
+                  },
+                  {
+                    path: 'nueva',
+                    element: (
+                      <RoleGuard routeKey="ventas">
+                        <NuevaVenta />
+                      </RoleGuard>
+                    ),
+                  },
+                  {
+                    path: ':id',
+                    element: (
+                      <RoleGuard routeKey="ventas">
+                        <VentaDetalle />
+                      </RoleGuard>
+                    ),
+                  },
+                ],
+              },
+
+              // 👤 CLIENTES
+              {
+                path: 'clientes',
+                children: [
+                  {
+                    index: true,
+                    element: (
+                      <RoleGuard routeKey="clientes">
+                        <Clientes />
+                      </RoleGuard>
+                    ),
+                  },
+                  {
+                    path: ':clienteId',
+                    element: (
+                      <RoleGuard routeKey="clientes">
+                        <ClienteDetalle />
+                      </RoleGuard>
+                    ),
+                  },
+                  {
+                    path: ':clienteId/disenos/:disenoId',
+                    element: (
+                      <RoleGuard routeKey="clientes">
+                        <ClienteDisenoDetalle />
+                      </RoleGuard>
+                    ),
+                  },
+                ],
+              },
+
+              // 🔒 ADMIN ONLY
+              {
+                path: 'usuarios',
+                element: (
+                  <RoleGuard routeKey="usuarios">
+                    <Usuarios />
+                  </RoleGuard>
+                ),
+              },
+              {
+                path: 'auditoria',
+                element: (
+                  <RoleGuard routeKey="auditoria">
+                    <Auditoria />
+                  </RoleGuard>
+                ),
+              },
+              {
+                path: 'sucursales',
+                element: (
+                  <RoleGuard routeKey="sucursales">
+                    <Sucursales />
+                  </RoleGuard>
+                ),
+              },
+
+              // 🌳 NODOS (IMPORTANTE FIX)
+              {
+                path: 'nodos',
+                children: [
+                  {
+                    path: ':id',
+                    element: (
+                      <RoleGuard routeKey="nodos">
+                        <NodoDetalle />
+                      </RoleGuard>
+                    ),
+                  },
+                ],
+              },
+
+            ],
+          },
         ],
-    },
-    { path: '*', element: <NotFound /> },
+      },
+      { path: '*', element: <NotFound /> },
+    ],
+  },
 ])

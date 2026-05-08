@@ -11,3 +11,11 @@ export const createSucursal = async (dto: CreateSucursalDto): Promise<Sucursal> 
   return data
 }
 
+export const updateSucursal = async (id: number, dto: Partial<CreateSucursalDto>): Promise<Sucursal> => {
+  const { data } = await api.patch<Sucursal>(`/sucursales/${id}`, dto)
+  return data
+}
+
+export const deleteSucursal = async (id: number): Promise<void> => {
+  await api.delete(`/sucursales/${id}`)
+}

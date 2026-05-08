@@ -6,6 +6,7 @@ export interface Rol {
 export interface Usuario {
   id: number
   nombre: string
+  apellido:string
   email: string
   password: string
   activo: boolean
@@ -16,6 +17,15 @@ export interface Usuario {
 
 export interface CreateUsuarioDto {
   nombre: string
+  apellido:string
+  email: string
+  password: string
+  rol_id: number
+}
+
+export interface updatedUsuariosDto {
+   nombre: string
+  apellido:string
   email: string
   password: string
   rol_id: number

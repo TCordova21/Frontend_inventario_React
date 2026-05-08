@@ -1,14 +1,33 @@
+import Logotipo from '../assets/Logotipo.png';
+
+const LogoSVG = () => {
+  return (
+    <div className="logo-container">
+      <img 
+        src={Logotipo} 
+        alt="Elitex Logo" 
+        className="logo-image logo-gray"
+      />
+      <img 
+        src={Logotipo} 
+        alt="Elitex Logo" 
+        className="logo-image logo-red"
+      />
+    </div>
+  );
+};
+
 const LoadingScreen = () => {
   return (
-    <div className="flex flex-col items-center justify-center h-full min-h-96">
-      <div className="relative inline-block leading-none">
-        <span className="letters-gray">Elitex</span>
-        <span className="letters-red">Elitex</span>
+    <div className="loading-screen-container">
+      <div className="loading-content">
+        {/* ← QUITAMOS el logo-wrapper, va directo */}
+        <LogoSVG />
+        
+       
       </div>
-      <p className="tagline">Tejidos de Calidad</p>
-      
     </div>
-  )
-}
+  );
+};
 
-export default LoadingScreen
+export default LoadingScreen;

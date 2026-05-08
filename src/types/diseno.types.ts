@@ -14,17 +14,22 @@ export interface DisenoColor {
   colores?: Color
 }
 
+// En diseno.types.ts
 export interface Diseno {
-  id: number
-  nombre: string
-  imagen?: string
-  descripcion?: string
-  codigo?: string
-  activo: boolean
-  subcategoria_id?: number
-  precio?: string | null
-  subcategorias?: Subcategoria
-  diseno_color?: DisenoColor[]
+  diseno_color: never[]
+  id: number;
+  nombre: string;
+  codigo: string;
+  descripcion?: string;
+  precio: number | string;
+  imagen?: string;
+  activo: boolean;
+  nodo_id: number;
+  // Agrega esto:
+  nodo?: {
+    id: number;
+    nombre: string;
+  };
 }
 
 export interface CreateDisenoDto {
@@ -32,7 +37,7 @@ export interface CreateDisenoDto {
   imagen?: string
   descripcion?: string
   codigo?: string
-  subcategoria_id: number
+  nodo_id: number
 }
 
 export interface UpdateDisenoDto {

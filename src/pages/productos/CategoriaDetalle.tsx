@@ -98,7 +98,7 @@ return (
             className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all text-left group overflow-hidden"
           >
             {/* Folder Header */}
-            <div className="h-24 bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center">
+            <div className="h-24 bg-linear-to-br from-amber-50 to-orange-50 flex items-center justify-center">
               <FolderOpen size={36} className="text-amber-300 group-hover:text-amber-400 transition-transform group-hover:scale-110 duration-200" />
             </div>
             {/* Folder Info */}

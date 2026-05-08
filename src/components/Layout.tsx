@@ -1,37 +1,52 @@
 import { useState } from 'react'
 import { Outlet } from 'react-router-dom'
+
 import Sidebar from './Sidebar'
-import { Menu } from 'lucide-react'
+import Header from './Header'
+import SessionAlert from './SessionAlert'
+
+import { useAuth } from '../context/AuthContext'
+import { refreshSession } from '../api/auth.api'
 
 const Layout = () => {
-  const [isOpen, setIsOpen] = useState(false) // Estado para móvil
-  const [collapsed, setCollapsed] = useState(false) // Estado para escritorio
 
+  const [isOpen, setIsOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
+
+  const {
+  showSessionAlert,
+  secondsLeft,
+  refreshAuth,
+  logout
+} = useAuth()
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden text-gray-900">
-      <Sidebar 
-        isOpen={isOpen} 
-        setIsOpen={setIsOpen} 
-        collapsed={collapsed} 
-        setCollapsed={setCollapsed} 
-      />
-      
-      <div className="flex flex-col flex-1 overflow-hidden">
-        {/* Header simple para móvil para abrir el menú */}
-        <header className="md:hidden flex items-center px-4 py-3 bg-white border-b border-gray-200">
-          <button 
-            onClick={() => setIsOpen(true)}
-            className="p-2 -ml-2 text-gray-600 hover:bg-gray-100 rounded-md"
-          >
-            <Menu size={24} />
-          </button>
-          <span className="ml-3 font-semibold text-gray-800">Elitex</span>
-        </header>
 
-        <main className="flex-1 overflow-y-auto h-full p-4 md:p-6">
+      <Sidebar
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
+      />
+
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+
+        <Header onOpenMenu={() => setIsOpen(true)} />
+
+        <main className="flex-1 overflow-y-auto p-4 md:px-4 md:py-1 bg-gray-50">
           <Outlet />
         </main>
+
       </div>
+
+      {/* ALERTA GLOBAL */}
+      <SessionAlert
+        isOpen={showSessionAlert}
+        secondsLeft={secondsLeft}
+        onExtend={refreshAuth}
+        onLogout={logout}
+      />
+
     </div>
   )
 }
