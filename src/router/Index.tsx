@@ -1,7 +1,6 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom'
 import Layout from '../components/Layout'
 import ProtectedRoute from '../components/ProtectedRoute'
-import { AuthProvider } from '../context/AuthContext'
 import RoleGuard from '../components/RoleGuard'
 
 import Login from '../pages/Login'
@@ -18,7 +17,6 @@ import Auditoria from '../pages/Auditoria'
 import NotFound from '../pages/NotFound'
 import ProductoDetalle from '../pages/productos/ProductoDetalle'
 import CategoriaDetalle from '../pages/productos/CategoriaDetalle'
-import SubcategoriaDetalle from '../pages/productos/SubcategoriaDetalle'
 import DisenoDetalle from '../pages/productos/DisenoDetalle'
 import ClienteDetalle from '../pages/clientes/ClienteDetalle'
 import ClienteDisenoDetalle from '../pages/clientes/ClienteDisenoDetalle'
@@ -89,14 +87,7 @@ export const router = createBrowserRouter([
                       </RoleGuard>
                     ),
                   },
-                  {
-                    path: ':productoId/:categoriaId/:subcategoriaId',
-                    element: (
-                      <RoleGuard routeKey="productos">
-                        <SubcategoriaDetalle />
-                      </RoleGuard>
-                    ),
-                  },
+                 
                 ],
               },
 

@@ -106,8 +106,7 @@ api.interceptors.response.use(
 
         const refreshToken =
           localStorage.getItem('refresh_token')
-        console.log('🟡 TOKEN ENVIADO AL REFRESH:')
-        console.log(refreshToken)
+     
 
         if (!refreshToken) {
           throw new Error('No refresh token')

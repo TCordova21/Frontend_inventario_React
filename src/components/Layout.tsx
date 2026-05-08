@@ -6,7 +6,7 @@ import Header from './Header'
 import SessionAlert from './SessionAlert'
 
 import { useAuth } from '../context/AuthContext'
-import { refreshSession } from '../api/auth.api'
+
 
 const Layout = () => {
 

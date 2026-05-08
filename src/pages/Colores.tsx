@@ -24,16 +24,8 @@ const ColorCard = ({ color, onEdit, onDelete }: ColorCardProps) => {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const isLight = () => {
-    const hex = color.codigo_hex.replace('#', '')
-    const r = parseInt(hex.substring(0, 2), 16)
-    const g = parseInt(hex.substring(2, 4), 16)
-    const b = parseInt(hex.substring(4, 6), 16)
-    return (r * 299 + g * 587 + b * 114) / 1000 > 128
-  }
 
-  const badgeStyles = isLight() ? 'bg-black/10 text-gray-800' : 'bg-white/20 text-white'
-  const actionIconStyles = isLight() ? 'text-gray-800 hover:bg-black/10' : 'text-white hover:bg-white/20'
+
 
   return (
     <div className="group bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all flex flex-col">

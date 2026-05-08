@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, Store, UserCheck, Layers } from 'lucide-react'
+import { X,  UserCheck} from 'lucide-react'
 import { createSucursal, updateSucursal } from '../../api/sucursal.api'
 import { getUsuarios } from '../../api/usuarios.api' 
 

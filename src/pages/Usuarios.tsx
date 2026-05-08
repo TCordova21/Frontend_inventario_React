@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Search, Plus, UserCheck, UserMinus, ShieldCheck, Trash2, Edit3, Users } from 'lucide-react'
+import { Search, Plus, UserCheck, UserMinus, ShieldCheck, Trash2, Edit3 } from 'lucide-react'
 import { getUsuarios, deleteUsuario } from '../api/usuarios.api'
 import type { Usuario } from '../types/usuario.types'
 import CreateUsuarioModal from '../components/modals/CreateUsuarioModal'

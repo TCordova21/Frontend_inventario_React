@@ -46,11 +46,7 @@ const DisenoCard = ({ diseno }: { diseno: Diseno }) => {
           <p className="text-xs text-gray-500 line-clamp-2 mb-2">{diseno.descripcion}</p>
         )}
 
-        {diseno.subcategorias && (
-          <span className="inline-block text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">
-            {diseno.subcategorias.nombre}
-          </span>
-        )}
+       
       </div>
     </div>
   )
