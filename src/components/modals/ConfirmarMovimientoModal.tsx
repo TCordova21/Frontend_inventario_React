@@ -68,7 +68,7 @@ const ConfirmarMovimientoModal = ({ isOpen, onClose, onConfirm, movimiento }: Pr
   }
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-[60]" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-60" onClick={onClose}>
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md mx-4 p-6" onClick={(e) => e.stopPropagation()}>
         
         {/* Header */}

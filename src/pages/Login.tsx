@@ -65,7 +65,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 };
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
-      <div className="w-full max-w-[400px]">
+      <div className="w-full max-w-100">
         
         {/* Card de Login */}
         <div className="bg-white rounded-2xl border border-gray-200 shadow-xl shadow-gray-200/50 p-8">

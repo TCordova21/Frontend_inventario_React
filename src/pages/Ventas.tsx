@@ -116,7 +116,7 @@ const Ventas = () => {
                   <span className="text-[9px] font-medium text-blue-400  tracking-tight leading-none">
                     Sucursal
                   </span>
-                  <span className="text-sm font-semibold text-blue-700 truncate max-w-[120px] sm:max-w-[200px]">
+                  <span className="text-sm font-semibold text-blue-700 truncate max-w-30 sm:max-w-50">
                     {usuario?.nombre_sucursal}
                   </span>
                 </div>

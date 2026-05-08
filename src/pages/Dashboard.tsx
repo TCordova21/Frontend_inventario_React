@@ -161,7 +161,7 @@ const Dashboard = () => {
               <div className="relative border-l-2 border-gray-100 ml-2 space-y-6">
                 {movimientos.slice(0, 4).map((m) => (
                   <div key={m.id} className="relative pl-6">
-                    <div className={`absolute -left-[9px] top-1 w-4 h-4 rounded-full border-2 border-white shadow-sm ${
+                    <div className={`absolute -left-2.25 top-1 w-4 h-4 rounded-full border-2 border-white shadow-sm ${
                       m.tipo_movimiento === 'ENTRADA' ? 'bg-purple-500' : 
                       m.tipo_movimiento === 'VENTA' ? 'bg-green-500' : 'bg-gray-400'
                     }`} />

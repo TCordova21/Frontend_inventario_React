@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Plus, Package, ChevronRight, FolderTree, Pencil, Trash2, ArrowRight } from 'lucide-react'
+import { Plus, Package,  FolderTree, Pencil, Trash2, ArrowRight } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { getNodosRaiz, deleteNodo } from '../api/nodo.api'
@@ -134,7 +134,7 @@ const Productos = () => {
                 {n.imagen ? (
                   <img src={n.imagen} alt={n.nombre} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
+                  <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-blue-50 to-indigo-50">
                     <Package size={48} className="text-blue-200" />
                   </div>
                 )}

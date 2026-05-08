@@ -106,7 +106,7 @@ return (
             className="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:border-blue-300 transition-all text-left group overflow-hidden"
           >
             {/* Header de la Card con gradiente Violeta */}
-            <div className="h-24 bg-gradient-to-br from-violet-50 to-purple-50 flex items-center justify-center">
+            <div className="h-24 bg-linear-to-br from-violet-50 to-purple-50 flex items-center justify-center">
               <Layers size={36} className="text-violet-300 group-hover:text-violet-400 transition-transform group-hover:scale-110 duration-200" />
             </div>
             {/* Info de la Card */}

@@ -83,7 +83,7 @@ const CreateNodoModal = ({ isOpen, onClose, onSuccess, nodoToEdit, padre_id }: P
 
   return (
     <div
-      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[60] transition-all"
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-60 transition-all"
       onClick={onClose}
     >
       <div

@@ -123,7 +123,7 @@ const ClienteDetalle = () => {
                     className="w-full h-full object-scale-down group-hover:scale-110 transition-transform duration-500" 
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
+                  <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-blue-50 to-indigo-50">
                     <Package size={40} className="text-blue-200" />
                   </div>
                 )}

@@ -130,7 +130,7 @@ const VentaModal = ({ isOpen, onClose, onSuccess, sucursalId, sucursalNombre }: 
 
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
-      <div className="bg-white rounded-[2rem] shadow-2xl w-full max-w-5xl h-[85vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white rounded-4xl shadow-2xl w-full max-w-5xl h-[85vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
         
         {/* Header */}
         <div className="p-6 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
@@ -173,7 +173,7 @@ const VentaModal = ({ isOpen, onClose, onSuccess, sucursalId, sucursalNombre }: 
                       key={nodo.id}
                       disabled={sinStock}
                       onClick={() => agregarItem(nodo)}
-                      className={`group flex flex-col p-5 bg-white border-2 border-transparent rounded-[1.5rem] transition-all relative ${sinStock ? 'opacity-50 grayscale cursor-not-allowed' : 'hover:border-blue-500 hover:shadow-xl'}`}
+                      className={`group flex flex-col p-5 bg-white border-2 border-transparent rounded-3xl transition-all relative ${sinStock ? 'opacity-50 grayscale cursor-not-allowed' : 'hover:border-blue-500 hover:shadow-xl'}`}
                     >
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${sinStock ? 'bg-gray-100' : 'bg-blue-50 text-blue-600'}`}>
                         <Layers size={20} />

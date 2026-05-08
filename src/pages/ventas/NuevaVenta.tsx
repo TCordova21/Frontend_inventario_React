@@ -136,7 +136,7 @@ const NuevaVenta = () => {
         </div>
 
         {/* Panel de Detalles de Venta */}
-        <div className="bg-white rounded-[2.5rem] border border-gray-100 p-6 shadow-2xl shadow-blue-900/5 h-fit flex flex-col min-h-[500px]">
+        <div className="bg-white rounded-[2.5rem] border border-gray-100 p-6 shadow-2xl shadow-blue-900/5 h-fit flex flex-col min-h-125">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center text-white">
               <ShoppingCart size={18} />
@@ -144,7 +144,7 @@ const NuevaVenta = () => {
             <h2 className="font-bold text-gray-800">Resumen</h2>
           </div>
 
-          <div className="flex-1 space-y-4 mb-6 overflow-y-auto max-h-[400px] pr-2">
+          <div className="flex-1 space-y-4 mb-6 overflow-y-auto max-h-100 pr-2">
             {items.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-48 text-center opacity-30">
                 <ShoppingCart size={40} className="mb-2" />

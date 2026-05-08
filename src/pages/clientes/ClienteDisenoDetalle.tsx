@@ -4,7 +4,7 @@ import { ChevronRight, ImageOff } from 'lucide-react'
 import { getDisenosByCliente } from '../../api/cliente.api'
 import type { ClienteDiseno } from '../../types/cliente.types'
 import LoadingScreen from '../../components/LoadingScreen'
-import type { Diseno, DisenoColor } from '../../types/diseno.types'
+import type {  DisenoColor } from '../../types/diseno.types'
 import { getDisenoColorsByDiseno } from '../../api/disenoColor.api'
 
 
@@ -89,7 +89,7 @@ const ClienteDisenoDetalle = () => {
                     Clientes
                 </button>
 
-                <ChevronRight size={14} className="flex-shrink-0" />
+                <ChevronRight size={14} className="shrink-0" />
 
                 <button
                     onClick={() => navigate(`/clientes/${clienteId}`)}
@@ -98,7 +98,7 @@ const ClienteDisenoDetalle = () => {
                     Detalle Cliente
                 </button>
 
-                <ChevronRight size={14} className="flex-shrink-0" />
+                <ChevronRight size={14} className="shrink-0" />
 
                 <span className="text-gray-700 font-semibold truncate">
                     {diseno.nombre}
@@ -152,7 +152,7 @@ const ClienteDisenoDetalle = () => {
                                 )}
                             </div>
                             
-                            <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 min-w-[120px] text-center">
+                            <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 min-w-30 text-center">
                                 <p className="text-[10px] text-gray-400 uppercase font-bold mb-1">Precio Unitario</p>
                                 <span className="text-2xl font-black text-gray-800">
                                     ${Number(diseno.precio || 0).toFixed(2)}
@@ -179,7 +179,7 @@ const ClienteDisenoDetalle = () => {
                                         className="flex items-center gap-3 p-3 bg-white border border-gray-100 rounded-xl hover:border-blue-200 transition-colors group"
                                     >
                                         <div 
-                                            className="w-10 h-10 rounded-full border-2 border-white shadow-sm flex-shrink-0 group-hover:scale-110 transition-transform"
+                                            className="w-10 h-10 rounded-full border-2 border-white shadow-sm shrink-0 group-hover:scale-110 transition-transform"
                                             style={{ backgroundColor: c.colores?.codigo_hex || '#eee' }}
                                         />
                                         <div className="overflow-hidden">

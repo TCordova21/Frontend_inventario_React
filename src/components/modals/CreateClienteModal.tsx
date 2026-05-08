@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, User, Phone, Tag, Save } from 'lucide-react'
+import { X,  Save } from 'lucide-react'
 import { createCliente, updateCliente } from '../../api/cliente.api'
 import type { Cliente, CreateClienteDto } from '../../types/cliente.types'
 import { toast } from 'react-toastify'
@@ -167,7 +167,7 @@ const CreateClienteModal = ({ isOpen, onClose, onSuccess, clienteToEdit }: Props
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2.5 text-sm font-medium text-white rounded-xl transition-all flex items-center gap-2 active:scale-95 disabled:opacity-50 bg-blue-600 hover:bg-blue-700 shadow-blue-100' : 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-100 "
+              className="px-6 py-2.5 text-sm font-medium text-white rounded-xl transition-all flex items-center gap-2 active:scale-95 disabled:opacity-50 bg-blue-600 hover:bg-blue-700 shadow-blue-100' : 'bg-indigo-600 shadow-indigo-100 "
             >
               {loading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />

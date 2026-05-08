@@ -21,22 +21,21 @@ const SessionAlert = ({
 const handleExtend = async () => {
   try {
 
-    console.log('🟡 CLICK EN EXTENDER')
+  
 
     setLoading(true)
 
     await onExtend()
 
-    console.log('🟢 onExtend TERMINÓ OK')
+  
 
   } catch (error) {
 
-    console.error('🔴 onExtend FALLÓ')
-    console.error(error)
+
 
   } finally {
 
-    console.log('⚪ finally ejecutado')
+  
 
     setLoading(false)
   }
@@ -50,7 +49,7 @@ const handleExtend = async () => {
     .padStart(2, '0')}`
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[999] p-4 animate-in fade-in duration-200">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-999 p-4 animate-in fade-in duration-200">
 
       <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden animate-in zoom-in-95 duration-200">
 

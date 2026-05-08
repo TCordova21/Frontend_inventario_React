@@ -2,10 +2,6 @@ import { useState } from 'react'
 import { Bell, LogOut, ChevronDown, Menu, User, Check, ArrowRightLeft, Clock } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useNotificaciones } from '../hooks/useNotificaciones'
-import { confirmarMovimiento } from '../api/movimiento.api'
-import { toast } from 'react-toastify'
-import type { Movimiento } from '../types/movimiento.types'
-
 import { useNavigate } from 'react-router-dom'
 
 interface HeaderProps {
@@ -20,7 +16,7 @@ const Header = ({ onOpenMenu }: HeaderProps) => {
 
   const esAdmin = usuario?.rol === 'ADMIN'
 
-  const { pendientes, loading: loadingNotif, refetch } = useNotificaciones(
+  const { pendientes, loading: loadingNotif } = useNotificaciones(
     esAdmin ? undefined : usuario?.sucursal_id ?? undefined
   )
   const initials = usuario?.nombre?.charAt(0).toUpperCase() || ''
@@ -67,7 +63,7 @@ const Header = ({ onOpenMenu }: HeaderProps) => {
           >
             <Bell size={20} />
             {pendientes.length > 0 && (
-              <span className="absolute top-1.5 right-1.5 min-w-[18px] h-[18px] bg-red-500 rounded-full border-2 border-white flex items-center justify-center">
+              <span className="absolute top-1.5 right-1.5 min-w-4.5 h-4.5 bg-red-500 rounded-full border-2 border-white flex items-center justify-center">
                 <span className="text-[9px] font-black text-white leading-none px-0.5">
                   {pendientes.length > 9 ? '9+' : pendientes.length}
                 </span>
@@ -181,7 +177,7 @@ const Header = ({ onOpenMenu }: HeaderProps) => {
             onClick={() => { setMenuOpen(!menuOpen); setNotifOpen(false) }}
             className="flex items-center gap-2.5 p-1 pr-2 rounded-xl hover:bg-gray-50 border border-transparent hover:border-gray-100 transition-all"
           >
-            <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-blue-500 flex items-center justify-center shrink-0 shadow-md border-2 border-white">
+            <div className="w-9 h-9 rounded-full bg-linear-to-tr from-blue-600 to-blue-500 flex items-center justify-center shrink-0 shadow-md border-2 border-white">
               <span className="text-white text-xs font-bold">{initials || <User size={14} />}</span>
             </div>
 

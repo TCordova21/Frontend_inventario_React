@@ -196,7 +196,7 @@ const Movimientos = () => {
                   <span className="text-[9px] font-medium text-blue-400  tracking-tight leading-none">
                     Sucursal
                   </span>
-                  <span className="text-sm font-semibold text-blue-700 truncate max-w-[120px] sm:max-w-[200px]">
+                  <span className="text-sm font-semibold text-blue-700 truncate max-w-30 sm:max-w-50">
                     {usuario?.nombre_sucursal}
                   </span>
                 </div>
@@ -318,7 +318,7 @@ const Movimientos = () => {
                       {/* Quien envió */}
                       <div className="flex items-center gap-2 text-gray-500">
                         <User size={10} className="shrink-0" />
-                        <p className="text-[10px] font-medium truncate max-w-[100px]">
+                        <p className="text-[10px] font-medium truncate max-w-25">
                           {m.usuarios?.nombre || 'Admin'}
                         </p>
                       </div>
@@ -327,7 +327,7 @@ const Movimientos = () => {
                       {m.usuarios_movimientos_inventario_usuario_confirmacion_idTousuarios && (
                         <div className="flex items-center gap-2 text-blue-600 border-t border-gray-50 pt-1">
                           <CheckCircle2 size={10} className="shrink-0" />
-                          <p className="text-[10px] font-bold truncate max-w-[100px]">
+                          <p className="text-[10px] font-bold truncate max-w-25">
                             {m.usuarios_movimientos_inventario_usuario_confirmacion_idTousuarios.nombre}
                           </p>
                         </div>
