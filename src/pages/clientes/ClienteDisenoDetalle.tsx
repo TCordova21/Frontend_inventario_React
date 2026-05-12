@@ -6,6 +6,7 @@ import type { ClienteDiseno } from '../../types/cliente.types'
 import LoadingScreen from '../../components/LoadingScreen'
 import type {  DisenoColor } from '../../types/diseno.types'
 import { getDisenoColorsByDiseno } from '../../api/disenoColor.api'
+import { getImageUrl } from '../../utils/image'
 
 
 const ClienteDisenoDetalle = () => {
@@ -111,7 +112,7 @@ const ClienteDisenoDetalle = () => {
                     <div className="aspect-square w-full rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-sm flex items-center justify-center p-2">
                         {diseno.imagen ? (
                             <img
-                                src={diseno.imagen}
+                                src={getImageUrl(diseno.imagen)}
                                 alt={diseno.nombre}
                                 className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
                             />

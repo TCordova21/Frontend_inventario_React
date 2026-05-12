@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { 
-  Bell, LogOut, ChevronDown, Menu, Check, ArrowRightLeft, 
-  Clock, PackageCheck, Settings, RotateCcw 
+import {
+  Bell, LogOut, ChevronDown, Menu, Check, ArrowRightLeft,
+  Clock, PackageCheck, Settings, RotateCcw
 } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useNotificaciones } from '../hooks/useNotificaciones'
@@ -48,7 +48,7 @@ const Header = ({ onOpenMenu }: HeaderProps) => {
 
   return (
     <header className="h-16 bg-white border-b border-gray-200 px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-40 shrink-0">
-      
+
       {/* Lado Izquierdo */}
       <div className="flex items-center gap-2 sm:gap-4 overflow-hidden">
         <button
@@ -58,14 +58,14 @@ const Header = ({ onOpenMenu }: HeaderProps) => {
           <Menu size={20} />
         </button>
 
-       
+
       </div>
 
       {/* Lado Derecho */}
       <div className="flex items-center gap-1 sm:gap-3">
-        
+
         {/* Notificaciones */}
-        <div className="relative">
+        <div className="relative ">
           <button
             onClick={() => { setNotifOpen(!notifOpen); setMenuOpen(false) }}
             className="p-2 text-gray-500 hover:bg-gray-100 rounded-xl relative transition-colors"
@@ -82,9 +82,9 @@ const Header = ({ onOpenMenu }: HeaderProps) => {
 
           {notifOpen && (
             <>
-              <div className="fixed inset-0 z-10" onClick={() => setNotifOpen(false)} />
+              <div className="fixed inset-0 z-10 " onClick={() => setNotifOpen(false)} />
               <div className="absolute -right-10 sm:right-0 top-12 w-[85vw] sm:w-80 bg-white rounded-2xl border border-gray-200 shadow-2xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                
+
                 <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between bg-gray-50/30">
                   <div className="min-w-0">
                     <p className="text-sm font-bold text-gray-800">Pendientes</p>
@@ -99,7 +99,7 @@ const Header = ({ onOpenMenu }: HeaderProps) => {
                   )}
                 </div>
 
-                <div className="max-h-80 overflow-y-auto divide-y divide-gray-50">
+                <div className="max-h-80 overflow-y-auto overflow-x-hidden divide-y divide-gray-50">
                   {loadingNotif ? (
                     <div className="flex items-center justify-center py-8">
                       <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
@@ -115,16 +115,24 @@ const Header = ({ onOpenMenu }: HeaderProps) => {
                       const IconoMov = config.icon;
 
                       return (
-                        <div key={mov.id} className={'px-4 hover:bg-gray-50  rounded-2xl mb-2 transition-colors'}>
-                          <div className={`flex items-start gap-1 p-3 ${config.bg} rounded-2xl`}>
+                        <div
+                          key={mov.id}
+                          className="px-4 hover:bg-gray-50 rounded-2xl mb-2 cursor-pointer  hover:scale-104 transition-transform duration-500 "
+                          onClick={() => {
+                            // Navegamos pasando el tipo de movimiento como query param
+                            navigate(`/movimientos?tipo=${mov.tipo_movimiento}`);
+                            setNotifOpen(false);
+                          }}
+                        >
+                          <div className={`flex items-start gap-1 p-3 ${config.bg} rounded-2xl hover:bg-gray-100 transition-colors`}>
                             {/* Ícono Dinámico */}
                             <div className={`w-8 h-8 ${config.bg} rounded-lg flex items-center justify-center shrink-0 mt-3.5 transition-colors`}>
                               <IconoMov size={16} className={config.color} />
                             </div>
-                            
+
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center  gap-1 mb-1">
-                                <span className={`text-[9px] font-normal ${config.bg} ${config.bg.replace('50', '200')} ${config.color}  py-0.5 px-1 rounded uppercase `}>
+                                <span className={`text-[9px] font-normal ${config.bg}  ${config.color}  py-0.5 px-1 rounded uppercase `}>
                                   {mov.tipo_movimiento.replace('_', ' ')}
                                 </span>
                               </div>

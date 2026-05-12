@@ -132,7 +132,7 @@ const Productos = () => {
             >
               <div className="h-35 bg-gray-100 relative overflow-hidden">
                 {n.imagen ? (
-                  <img src={n.imagen} alt={n.nombre} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <img src={n.imagen} alt={n.nombre} className="w-full h-full object-cover group-hover:scale-110  " />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-linear-to-br from-blue-50 to-indigo-50">
                     <Package size={48} className="text-blue-200" />

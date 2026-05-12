@@ -10,6 +10,7 @@ import AssignDisenoModal from '../../components/modals/AssignDisenoModal'
 import LoadingScreen from '../../components/LoadingScreen'
 import ConfirmAlert from '../../components/ConfirmAlert'
 import {toast} from 'react-toastify'
+import { getImageUrl } from '../../utils/image'
 
 const ClienteDetalle = () => {
   const { clienteId } = useParams()
@@ -118,7 +119,7 @@ const ClienteDetalle = () => {
               <div className="h-48 bg-gray-100 relative overflow-hidden">
                 {dc.disenos?.imagen ? (
                   <img 
-                    src={dc.disenos.imagen} 
+                  src={getImageUrl(dc.disenos.imagen)}
                     alt={dc.disenos.nombre} 
                     className="w-full h-full object-scale-down group-hover:scale-110 transition-transform duration-500" 
                   />

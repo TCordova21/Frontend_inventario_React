@@ -9,8 +9,7 @@ interface Props {
   onClose: () => void
   onSuccess: () => void
   nodoToEdit?: Nodo | null
-  padre_id?: number | null // <-- Importante: recibirlo aquí
-  
+  padre_id?: number | null 
 }
 
 const CreateNodoModal = ({ isOpen, onClose, onSuccess, nodoToEdit, padre_id }: Props) => {
@@ -22,7 +21,10 @@ const CreateNodoModal = ({ isOpen, onClose, onSuccess, nodoToEdit, padre_id }: P
   })
   const [loading, setLoading] = useState(false)
 
-  // Sincronizar el formulario
+  // Lógica para determinar si es carpeta o producto
+  // Si tiene un padre_id, asumimos que es una subcategoría (Carpeta)
+  const esCarpeta = !!padre_id;
+
   useEffect(() => {
     if (isOpen) {
       if (nodoToEdit) {
@@ -33,16 +35,15 @@ const CreateNodoModal = ({ isOpen, onClose, onSuccess, nodoToEdit, padre_id }: P
           padre_id: nodoToEdit.padre_id
         })
       } else {
-        // MODO CREACIÓN: Usamos el padre_id que viene por props
         setForm({ 
           nombre: '', 
-          tipo: 'producto', 
+          tipo: esCarpeta ? 'producto' : 'producto', // Aquí puedes ajustar el tipo según tu DB
           imagen: '', 
-          padre_id: padre_id || null // <-- AQUÍ ESTABA EL ERROR
+          padre_id: padre_id || null 
         })
       }
     }
-  }, [isOpen, nodoToEdit, padre_id]) // Agregamos padre_id a las dependencias
+  }, [isOpen, nodoToEdit, padre_id, esCarpeta])
 
   if (!isOpen) return null
 
@@ -64,7 +65,7 @@ const CreateNodoModal = ({ isOpen, onClose, onSuccess, nodoToEdit, padre_id }: P
         toast.info('Actualizado correctamente')
       } else {
         await createNodo(form)
-        toast.success(padre_id ? 'Carpeta creada' : 'Producto creado')
+        toast.success(esCarpeta ? 'Carpeta creada' : 'Producto creado')
       }
       onSuccess()
       onClose()
@@ -75,11 +76,9 @@ const CreateNodoModal = ({ isOpen, onClose, onSuccess, nodoToEdit, padre_id }: P
     }
   }
 
-  // Lógica de textos dinámicos para no dañar tu diseño
-  const esSubcategoria = !!padre_id;
   const titulo = nodoToEdit 
-    ? (esSubcategoria ? 'Editar Carpeta' : 'Editar Producto') 
-    : (esSubcategoria ? 'Nueva Carpeta' : 'Nuevo Producto');
+    ? (esCarpeta ? 'Editar Carpeta' : 'Editar Producto') 
+    : (esCarpeta ? 'Nueva Carpeta' : 'Nuevo Producto');
 
   return (
     <div
@@ -95,7 +94,7 @@ const CreateNodoModal = ({ isOpen, onClose, onSuccess, nodoToEdit, padre_id }: P
           <div>
             <h2 className="text-xl font-bold text-gray-800">{titulo}</h2>
             <p className="text-xs text-gray-500 mt-1">
-              {esSubcategoria ? 'Organiza mejor tus diseños' : 'Define una nueva línea de catálogo'}
+              {esCarpeta ? 'Organiza mejor tus diseños' : 'Define una nueva línea de catálogo'}
             </p>
           </div>
           <button onClick={onClose} className="p-2 text-gray-400 hover:text-gray-600 hover:bg-white rounded-full transition-all">
@@ -104,49 +103,62 @@ const CreateNodoModal = ({ isOpen, onClose, onSuccess, nodoToEdit, padre_id }: P
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-5">
-          {/* Previsualización */}
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-semibold text-gray-700">Vista previa</label>
-            <div className="relative h-36 w-full bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden">
-              {form.imagen ? (
-                <img src={form.imagen} alt="Preview" className="w-full h-full object-cover" onError={(e) => (e.currentTarget.src = 'https://placehold.co/400x300?text=Error+al+cargar')} />
-              ) : (
-                <div className="flex flex-col items-center gap-2">
-                  <ImageIcon size={32} className="text-gray-300" />
-                  <span className="text-[10px] text-gray-400 font-medium">Opcional para subcategorías</span>
+          
+          {/* 1. SECCIÓN DE IMAGEN: Solo se muestra si NO es una carpeta */}
+          {!esCarpeta && (
+            <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-top-2">
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-semibold text-gray-700">Vista previa del producto</label>
+                <div className="relative h-36 w-full bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden">
+                  {form.imagen ? (
+                    <img 
+                      src={form.imagen} 
+                      alt="Preview" 
+                      className="w-full h-full object-cover" 
+                      onError={(e) => (e.currentTarget.src = 'https://placehold.co/400x300?text=Imagen+No+Válida')} 
+                    />
+                  ) : (
+                    <div className="flex flex-col items-center gap-2">
+                      <ImageIcon size={32} className="text-gray-300" />
+                      <span className="text-[10px] text-gray-400 font-medium">Sin imagen de referencia</span>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </div>
+              </div>
 
-          {/* Campos */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-semibold text-gray-700">URL de la Imagen</label>
+                <input
+                  type="text"
+                  name="imagen"
+                  value={form.imagen}
+                  onChange={handleChange}
+                  placeholder="https://ejemplo.com/foto.jpg"
+                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* 2. NOMBRE: Siempre visible */}
           <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold text-gray-700">Nombre</label>
+            <label className="text-sm font-semibold text-gray-700">Nombre de la {esCarpeta ? 'Carpeta' : 'Categoría'}</label>
             <input
               type="text"
               name="nombre"
               autoComplete="off"
               value={form.nombre}
               onChange={handleChange}
-              placeholder={esSubcategoria ? "Ej: Anime, Minimalista..." : "Ej: Ponchos Premium"}
+              placeholder={esCarpeta ? "Ej: Anime, Minimalista..." : "Ej: Ponchos Premium"}
               className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
             />
-          </div>
-
-          <div className="flex flex-col gap-1.5">
-            <label className="text-sm font-semibold text-gray-700">URL de la Imagen (Opcional)</label>
-            <input
-              type="text"
-              name="imagen"
-              value={form.imagen}
-              onChange={handleChange}
-              placeholder="https://..."
-              className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none transition-all"
-            />
+            {esCarpeta && (
+                <p className="text-[10px] text-gray-400 italic">Las carpetas heredan la imagen de sus diseños internos.</p>
+            )}
           </div>
 
           {/* Botones */}
-          <div className="flex justify-end gap-3 mt-4">
+          <div className="flex justify-end gap-3 mt-2">
             <button type="button" onClick={onClose} className="px-5 py-2.5 text-sm font-semibold text-gray-500 hover:text-gray-800 hover:bg-gray-100 rounded-xl transition-all">
               Cancelar
             </button>
@@ -160,10 +172,7 @@ const CreateNodoModal = ({ isOpen, onClose, onSuccess, nodoToEdit, padre_id }: P
               {loading ? (
                 <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
-                <>
-                 
-                  {nodoToEdit ? 'Guardar' : (esSubcategoria ? 'Crear Carpeta' : 'Crear Producto')}
-                </>
+                <>{nodoToEdit ? 'Guardar Cambios' : (esCarpeta ? 'Crear Carpeta' : 'Crear Producto')}</>
               )}
             </button>
           </div>

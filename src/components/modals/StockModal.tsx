@@ -5,6 +5,8 @@ import { getDisenosFlaten } from '../../api/nodo.api'
 import type { Inventario, Sucursal } from '../../types/inventario.types'
 import type { CreateMovimientoDto } from '../../types/movimiento.types'
 import { toast } from 'react-toastify'
+import { getImageUrl } from '../../utils/image'
+
 
 interface Props {
   isOpen: boolean
@@ -207,7 +209,7 @@ const StockModal = ({
 
                 <div className="w-40 h-40 rounded-lg border border-gray-200 overflow-hidden bg-gray-50 flex items-center justify-center shrink-0 shadow-sm">
                   {disenoSeleccionadoData?.imagen ? (
-                    <img src={disenoSeleccionadoData.imagen} alt="Ref" className="w-full h-full object-cover" />
+                    <img src={getImageUrl(disenoSeleccionadoData.imagen)} alt="Ref" className="w-full h-full object-cover" />
                   ) : (
                     <ImageIcon className="text-gray-300" size={18} />
                   )}

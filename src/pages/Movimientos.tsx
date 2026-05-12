@@ -12,6 +12,8 @@ import LoadingScreen from '../components/LoadingScreen'
 import ConfirmarMovimientoModal from '../components/modals/ConfirmarMovimientoModal'
 import { toast } from 'react-toastify'
 import { useAuth } from '../context/AuthContext'
+import { getImageUrl } from '../utils/image'
+import { useLocation } from 'react-router-dom'
 
 const iconTipo: Record<string, React.ReactNode> = {
   TRASLADO: <ArrowRightLeft size={14} />,
@@ -50,11 +52,14 @@ const Movimientos = () => {
   const [fechaFin, setFechaFin] = useState('')
   const [orden, setOrden] = useState<'reciente' | 'antiguo' | 'alfabetico'>('reciente')
   const [currentPage, setCurrentPage] = useState(1)
+  const location = useLocation()
 
   //Roles
   const { usuario } = useAuth()
   const esAdmin = usuario?.rol === 'ADMIN'
   const esVendedor = usuario?.rol === 'VENDEDOR'
+
+
 
 
   const fetchData = async () => {
@@ -94,7 +99,20 @@ const Movimientos = () => {
 
   useEffect(() => { fetchData() }, [])
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search)
+    const tipoDesdeUrl = params.get('tipo')
 
+    if (tipoDesdeUrl) {
+      setFiltroTipo(tipoDesdeUrl)
+
+      // Opcional: Si quieres que el scroll suba al aplicar el filtro
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+
+      // Limpiar el parámetro de la URL sin recargar la página (opcional)
+      // window.history.replaceState({}, '', location.pathname);
+    }
+  }, [location])
 
   useEffect(() => {
     if (esVendedor && usuario?.sucursal_id) {
@@ -281,7 +299,7 @@ const Movimientos = () => {
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-md bg-gray-100 overflow-hidden border border-gray-200 shrink-0">
                         <img
-                          src={m.disenos?.imagen || m.nodos?.imagen || '/placeholder.png'}
+                          src={getImageUrl(m.disenos?.imagen || m.nodos?.imagen)}
                           className="w-full h-full object-cover"
                           alt="preview"
                         />
@@ -347,8 +365,8 @@ const Movimientos = () => {
                             disabled={esPropioMovimiento}
                             title={esPropioMovimiento ? 'No puedes confirmar tu propio movimiento' : 'Confirmar recepción'}
                             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase shadow-sm transition-all ${esPropioMovimiento
-                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                : 'bg-amber-500 text-white hover:bg-amber-600'
+                              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                              : 'bg-amber-500 text-white hover:bg-amber-600'
                               }`}
                           >
                             <Clock size={12} />

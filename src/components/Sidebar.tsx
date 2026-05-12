@@ -58,7 +58,7 @@ const Sidebar = ({ isOpen, setIsOpen, collapsed, setCollapsed }: SidebarProps) =
         {/* Botón Flotante para Colapsar (Solo escritorio) */}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden md:flex absolute -right-3 top-10 w-6 h-6 bg-white border border-gray-200 rounded-full items-center justify-center shadow-sm hover:bg-blue-50 hover:border-blue-200 text-gray-500 hover:text-blue-600 transition-all z-50"
+          className="hidden md:flex absolute -right-3 top-13 w-6 h-6 bg-white border border-gray-200 rounded-full items-center justify-center shadow-sm hover:bg-blue-50 hover:border-blue-200 text-gray-500 hover:text-blue-600 transition-all z-50"
         >
           {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
         </button>

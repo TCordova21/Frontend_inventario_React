@@ -18,6 +18,7 @@ import ConfirmAlert from '../../components/ConfirmAlert'
 import WarningAlert from '../../components/WarningAlert'
 import { getAncestros } from '../../api/nodo.api'
 import type { Ancestro } from '../../types/nodo.types'
+import { getImageUrl } from '../../utils/image'
 
 const DisenoDetalle = () => {
     const { disenoId } = useParams()
@@ -174,7 +175,7 @@ const DisenoDetalle = () => {
                     <div className="aspect-square rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-sm flex items-center justify-center group">
                         {diseno.imagen ? (
                             <img
-                                src={diseno.imagen}
+                                src={getImageUrl(diseno.imagen)}
                                 alt={diseno.nombre}
                                 className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-500"
                             />
@@ -190,7 +191,7 @@ const DisenoDetalle = () => {
                         <p className="text-[10px] text-blue-400 font-bold uppercase mb-1">Estado del Diseño</p>
                         <div className="flex items-center gap-2">
                             <div className={`w-2 h-2 rounded-full ${diseno.activo ? 'bg-green-500' : 'bg-gray-400'}`} />
-                            <span className="text-sm font-bold text-gray-700">{diseno.activo ? 'Activo para la venta' : 'Pausado'}</span>
+                            <span className="text-[11px] font-medium text-gray-700">{diseno.activo ? 'Activo para la venta' : 'Pausado'}</span>
                         </div>
                     </div>
                 </div>

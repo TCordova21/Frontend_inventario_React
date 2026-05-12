@@ -24,6 +24,7 @@ import CreateDisenoModal from '../../components/modals/CreateDisenoModal'
 import ConfirmAlert from '../../components/ConfirmAlert'
 import LoadingScreen from '../../components/LoadingScreen'
 import WarningAlert from '../../components/WarningAlert'
+import { getImageUrl } from '../../utils/image'
 
 const NodoDetalle = () => {
   const { id } = useParams()
@@ -302,7 +303,7 @@ const NodoDetalle = () => {
                 <div className="flex items-center gap-4 p-3 md:p-4">
                   <div className="w-14 h-14 md:w-16 md:h-16 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-100">
                     {diseno.imagen ? (
-                      <img src={diseno.imagen} alt={diseno.nombre} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                      <img src={getImageUrl(diseno.imagen)} alt={diseno.nombre} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center"><ImageOff size={18} className="text-gray-300" /></div>
                     )}

@@ -16,6 +16,7 @@ import type { Diseno } from '../../types/diseno.types'
 import StockModal from '../../components/modals/StockModal'
 import LoadingScreen from '../../components/LoadingScreen'
 import { useAuth } from '../../context/AuthContext'
+import { getImageUrl } from '../../utils/image'
 
 const Inventario = () => {
   // --- ESTADOS ---
@@ -269,7 +270,7 @@ const Inventario = () => {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <div className="w-9 h-9 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-100">
-                        {fila.imagen ? <img src={fila.imagen} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><Package size={14} className="text-gray-300" /></div>}
+                        {fila.imagen ? <img src={getImageUrl(fila.imagen)} className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center"><Package size={14} className="text-gray-300" /></div>}
                       </div>
                       <span className="text-sm font-medium text-gray-700">{fila.nombre}</span>
                     </div>
