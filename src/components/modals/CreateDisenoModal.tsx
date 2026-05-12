@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { X, ImageOff, Package, Link2, Loader2, ImagePlus, Trash2 } from 'lucide-react'
+import { X,  Package, Link2, Loader2, ImagePlus, Trash2 } from 'lucide-react'
 import { createDiseno } from '../../api/disenos.api'
 import type { CreateDisenoDto, Diseno } from '../../types/diseno.types'
 import { getImageUrl } from '../../utils/image'
@@ -26,7 +26,7 @@ const CreateDisenoModal = ({ isOpen, onClose, onSuccess, nodoId }: Props) => {
   const [form, setForm] = useState<CreateDisenoDto>(EMPTY_FORM)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [imgError, setImgError] = useState(false)
+  const [, setImgError] = useState(false)
   const [uploadingImage, setUploadingImage] = useState(false)
 
   useEffect(() => {
