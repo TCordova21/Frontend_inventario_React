@@ -351,7 +351,7 @@ const DisenoDetalle = () => {
                                         </div>
                                         <button
                                             onClick={() => handleRemoveColor(dc.id)}
-                                            className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all opacity-0 group-hover:opacity-100"
+                                            className="p-2 text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all md:opacity-0 group-hover:opacity-100"
                                         >
                                             <X size={18} />
                                         </button>

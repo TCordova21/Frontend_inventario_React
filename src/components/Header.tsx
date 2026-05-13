@@ -131,14 +131,15 @@ const Header = ({ onOpenMenu }: HeaderProps) => {
                             </div>
 
                             <div className="flex-1 min-w-0">
-                              <div className="flex items-center  gap-1 mb-1">
-                                <span className={`text-[9px] font-normal ${config.bg}  ${config.color}  py-0.5 px-1 rounded uppercase `}>
-                                  {mov.tipo_movimiento.replace('_', ' ')}
-                                </span>
-                              </div>
+                              
                               <p className="text-xs font-semibold text-gray-700 truncate">
                                 {mov.disenos?.nombre || mov.referencia}
                               </p>
+                              <div className="flex items-center  gap-1 ">
+                                <span className={`text-[9px] font-light ${config.bg}  ${config.color}  py-0.5 px-1 rounded  `}>
+                                  {mov.tipo_movimiento.replace('_', ' ')}
+                                </span>
+                              </div>
                               <div className="flex items-center justify-between gap-1 mt-2">
                                 <div className="flex items-center gap-1 text-[10px] text-gray-400">
                                   <Clock size={10} />

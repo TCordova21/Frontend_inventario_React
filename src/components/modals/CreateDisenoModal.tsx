@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { X,  Package, Link2, Loader2, ImagePlus, Trash2 } from 'lucide-react'
+import { useState, useEffect, useRef } from 'react'
+import { X, Package, Link2, Loader2, ImagePlus, Trash2 } from 'lucide-react'
 import { createDiseno } from '../../api/disenos.api'
 import type { CreateDisenoDto, Diseno } from '../../types/diseno.types'
 import { getImageUrl } from '../../utils/image'
@@ -27,7 +27,11 @@ const CreateDisenoModal = ({ isOpen, onClose, onSuccess, nodoId }: Props) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [, setImgError] = useState(false)
-  const [uploadingImage, setUploadingImage] = useState(false)
+  const [uploadingImage,] = useState(false)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  const hasLocalFile = !!selectedFile
+  const hasImageUrl = !!form.imagen?.trim()
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   useEffect(() => {
     if (nodoId) {
@@ -41,9 +45,11 @@ const CreateDisenoModal = ({ isOpen, onClose, onSuccess, nodoId }: Props) => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target
-
     if (name === 'imagen') {
       setImgError(false)
+
+      // IMPORTANTE
+      setSelectedFile(null)
     }
 
     setForm(prev => ({
@@ -54,30 +60,19 @@ const CreateDisenoModal = ({ isOpen, onClose, onSuccess, nodoId }: Props) => {
     setError(null)
   }
 
-  const handleImageUpload = async (
+  const handleImageUpload = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const file = e.target.files?.[0]
 
     if (!file) return
 
-    try {
-      setUploadingImage(true)
-      setImgError(false)
+    setSelectedFile(file)
 
-      const imageUrl = await uploadToCloudinary(file)
-
-      setForm(prev => ({
-        ...prev,
-        imagen: imageUrl
-      }))
-
-    } catch (error) {
-      console.error(error)
-      setError('Error al subir la imagen')
-    } finally {
-      setUploadingImage(false)
-    }
+    setForm(prev => ({
+      ...prev,
+      imagen: ''
+    }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -85,10 +80,16 @@ const CreateDisenoModal = ({ isOpen, onClose, onSuccess, nodoId }: Props) => {
     if (!form.nombre?.trim()) return setError('El nombre es obligatorio')
     if (!form.codigo?.trim()) return setError('El código es obligatorio')
     if (!form.nodo_id) return setError('Selecciona una subcategoría')
+    let imageUrl = form.imagen
+
+    if (selectedFile) {
+      imageUrl = await uploadToCloudinary(selectedFile)
+    }
     try {
       setLoading(true)
       const disenoCreado = await createDiseno({
         ...form,
+        imagen: imageUrl,
         nodo_id: Number(form.nodo_id),
       })
       setForm(EMPTY_FORM)
@@ -100,6 +101,9 @@ const CreateDisenoModal = ({ isOpen, onClose, onSuccess, nodoId }: Props) => {
     }
   }
 
+  const previewImage = selectedFile
+    ? URL.createObjectURL(selectedFile)
+    : getImageUrl(form.imagen)
 
 
   return (
@@ -182,8 +186,15 @@ const CreateDisenoModal = ({ isOpen, onClose, onSuccess, nodoId }: Props) => {
 
                 {/* Miniatura de Previa */}
                 <div className="w-35 h-35 rounded-xl bg-white border border-gray-100 shadow-sm flex items-center justify-center overflow-hidden shrink-0">
-                  {form.imagen ? (
-                    <img src={getImageUrl(form.imagen)} alt="Preview" className="w-full h-full object-cover" />
+                  {(form.imagen || selectedFile) ? (
+                    <img
+                      src={previewImage}
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        console.log('ERROR IMG:', e.currentTarget.src)
+                      }}
+                    />
                   ) : (
                     <div className="text-gray-300 flex flex-col items-center gap-1">
                       <Package size={24} />
@@ -199,8 +210,20 @@ const CreateDisenoModal = ({ isOpen, onClose, onSuccess, nodoId }: Props) => {
                       name="imagen"
                       value={form.imagen}
                       onChange={handleChange}
-                      placeholder="Pega el enlace de la imagen aquí..."
-                      className="w-full pl-3 pr-10 py-2.5 rounded-xl border border-gray-200 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 bg-white transition-all "
+                      placeholder={
+                        hasLocalFile
+                          ? 'Elimina el archivo para usar un link'
+                          : 'Pega el enlace de la imagen aquí...'
+                      }
+                      disabled={hasLocalFile}
+                      className={`
+    w-full pl-3 pr-10 py-2.5 rounded-xl border text-xs font-medium transition-all
+    focus:outline-none focus:ring-2 focus:ring-blue-500/20
+    ${hasLocalFile
+                          ? 'bg-gray-100 border-gray-100 text-gray-400 cursor-not-allowed'
+                          : 'bg-white border-gray-200'
+                        }
+  `}
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">
                       <Link2 size={14} />
@@ -209,8 +232,8 @@ const CreateDisenoModal = ({ isOpen, onClose, onSuccess, nodoId }: Props) => {
 
                   <div className="flex items-center gap-2">
                     <label className={`
-            flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-[10px] font-semibold transition-all cursor-pointer border
-            ${uploadingImage
+            flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-[10px] font-semibold transition-all cursor-pointer border
+            ${uploadingImage || hasImageUrl
                         ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
                         : 'bg-white text-blue-600 border-blue-200 hover:bg-blue-600 hover:text-white hover:border-blue-600 '
                       }
@@ -220,21 +243,38 @@ const CreateDisenoModal = ({ isOpen, onClose, onSuccess, nodoId }: Props) => {
                       ) : (
                         <ImagePlus size={14} />
                       )}
-                      {uploadingImage ? 'Procesando...' : 'Subir Archivo Local'}
+                      {uploadingImage
+                        ? 'Procesando...'
+                        : hasImageUrl
+                          ? 'Link Detectado'
+                          : 'Subir Archivo Local'}
 
                       <input
+                        ref={fileInputRef}
                         type="file"
                         accept="image/*"
                         className="hidden"
                         onChange={handleImageUpload}
-                        disabled={uploadingImage}
+                        disabled={uploadingImage || hasImageUrl}
                       />
                     </label>
 
-                    {form.imagen && (
+                    {(form.imagen || selectedFile) && (
                       <button
                         type="button"
-                        onClick={() => handleChange({ target: { name: 'imagen', value: '' } } as any)}
+                        onClick={() => {
+                          setForm(prev => ({
+                            ...prev,
+                            imagen: ''
+                          }))
+
+                          setSelectedFile(null)
+
+                          // RESET REAL DEL INPUT
+                          if (fileInputRef.current) {
+                            fileInputRef.current.value = ''
+                          }
+                        }}
                         className="p-2 text-red-400 hover:bg-red-50 rounded-lg transition-colors"
                         title="Eliminar imagen"
                       >
