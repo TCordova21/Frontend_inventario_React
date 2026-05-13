@@ -9,7 +9,7 @@ export interface CreateVentaDto {
 }
 
 // Define los estados posibles para todo el sistema
-export type EstadoVenta = 'COMPLETADA' | 'CANCELADA' | 'DEVUELTA';
+export type EstadoVenta = 'COMPLETADA' | 'CANCELADA' | 'DEVUELTA' | 'PARCIALMENTE_DEVUELTA';
 
 export interface Venta {
   id: number;
@@ -35,6 +35,7 @@ export interface VentaDetalle extends Venta {
     id: number;
     cantidad: number;
     precio_unitario: number;
+    cantidad_devuelta?: number; // Para mostrar cuánto se ha devuelto de este detalle
     diseno_id: number | null;
     nodo_id: number;
     disenos?: {
@@ -44,6 +45,8 @@ export interface VentaDetalle extends Venta {
     };
     nodos?: {
       nombre: string;
+      imagen?: string;
+      id: number;
     };
   }[];
 }

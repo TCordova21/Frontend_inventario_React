@@ -1,251 +1,262 @@
 import { useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import { 
-  ArrowLeft, Printer, 
-  Package, ShoppingCart, CheckCircle2, XCircle,
-  Hash, Info, RotateCcw, AlertTriangle
+   Printer, RotateCcw, ChevronRight, 
+  CheckCircle2, Calendar, Store, User, 
+  TrendingDown, ShoppingCart, XCircle, Clock
 } from 'lucide-react'
-import { getVentaById, updateEstadoVenta } from '../../api/venta.api' // Asumiendo que existe updateEstadoVenta
+import { getVentaById, procesarDevolucion } from '../../api/venta.api'
 import type { VentaDetalle } from '../../types/venta.types'
 import LoadingScreen from '../../components/LoadingScreen'
-import ConfirmAlert from '../../components/ConfirmAlert'
+import DevolucionModal from '../../components/modals/DevolucionModal'
 import { toast } from 'react-toastify'
+import { getImageUrl } from '../../utils/image'
 
 const DetalleVenta = () => {
   const { id } = useParams()
   const navigate = useNavigate()
   const [venta, setVenta] = useState<VentaDetalle | null>(null)
   const [loading, setLoading] = useState(true)
-  const [confirmOpen, setConfirmOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [itemsADevolver, setItemsADevolver] = useState<{[key: number]: number}>({})
+  const [isSaving, setIsSaving] = useState(false);
 
-  const fetchVenta = async () => {
+  const fetchData = async () => {
     try {
       setLoading(true)
       if (!id) return
       const data = await getVentaById(Number(id))
       setVenta(data)
+      
+      const initialQuantities: {[key: number]: number} = {}
+      data.detalle_ventas.forEach(d => { initialQuantities[d.id] = 0 })
+      setItemsADevolver(initialQuantities)
     } catch (error) {
-      toast.error("No se pudo cargar el detalle de la venta")
+      toast.error("No se pudo cargar el detalle")
       navigate('/ventas')
     } finally {
       setLoading(false)
     }
   }
 
-  useEffect(() => {
-    fetchVenta()
-  }, [id, navigate])
+  useEffect(() => { fetchData() }, [id])
 
-  const handleDevolucion = async () => {
+  const handleInputChange = (detalleId: number, val: string, max: number) => {
+    const num = Math.max(0, Math.min(max, Number(val)));
+    setItemsADevolver(prev => ({ ...prev, [detalleId]: num }));
+  }
+
+  const submitDevolucion = async () => {
+    const items = Object.entries(itemsADevolver)
+      .filter(([_, cantidad]) => cantidad > 0)
+      .map(([id, cantidad]) => ({ detalle_venta_id: Number(id), cantidad }));
+
     try {
+      setIsSaving(true);
       if (!id) return
-      // Esta función debe llamar al endpoint que cambia el estado a 'DEVUELTA'
-      // y dispara en el backend el trigger para reponer stock
-      await updateEstadoVenta(Number(id), 'DEVUELTA')
-      toast.success("Venta devuelta y stock repuesto correctamente")
-      fetchVenta() // Recargamos para ver el nuevo estado
+      await procesarDevolucion(Number(id), items)
+      toast.success("Devolución procesada")
+      setIsModalOpen(false)
+      fetchData() 
     } catch (error) {
-      toast.error("Error al procesar la devolución")
+      toast.error("Error al procesar")
     } finally {
-      setConfirmOpen(false)
-    }
+    setIsSaving(false); // 3. Desactivar carga
+  }
+    
   }
 
   if (loading) return <LoadingScreen />
   if (!venta) return null
 
-  const esCancelada = venta.estado === 'CANCELADA'
-  const esDevuelta = venta.estado === 'DEVUELTA'
-  const sePuedeDevolver = venta.estado === 'COMPLETADA'
+  // Métricas calculadas al estilo Inventario
+  const metrics = {
+    totalItems: venta.detalle_ventas.length,
+    unidadesVendidas: venta.detalle_ventas.reduce((acc, d) => acc + d.cantidad, 0),
+    unidadesDevueltas: venta.detalle_ventas.reduce((acc, d) => acc + (d.cantidad_devuelta || 0), 0),
+    totalVenta: Number(venta.total).toFixed(2)
+  }
+
+  const sePuedeDevolver = venta.estado === 'COMPLETADA' || venta.estado === 'PARCIALMENTE_DEVUELTA'
 
   return (
     <div className="p-6 animate-in fade-in duration-500">
-      {/* Header Estilo Inventario */}
+      
+      {/* Breadcrumbs estilo Movimientos */}
+      <nav className="flex items-center gap-2 text-sm whitespace-nowrap  text-gray-400 mb-4">
+        <Link to="/ventas" className="hover:text-blue-600">Ventas</Link>
+        <ChevronRight size={12} />
+        <span className="hover:text-blue-600 transition-colors flex items-center gap-1 shrink-0">Detalle #{venta.id}</span>
+      </nav>
+
+      {/* Header estilo Movimientos */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div className="flex items-center gap-4">
-          <button 
-            onClick={() => navigate('/ventas')}
-            className="p-2 bg-gray-100 hover:bg-blue-100 rounded-lg transition-colors text-gray-500 border border-gray-200 hover:border-blue-300"
-          >
-            <ArrowLeft size={20} strokeWidth={3} className='hover:text-blue-600' />
-          </button>
+       
           <div>
-            <h1 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
-              <ShoppingCart className="text-blue-600" size={24} />
-              Venta # {venta.id}
-            </h1>
+            <h1 className="text-2xl font-semibold text-gray-800">Orden de Venta</h1>
+            <p className="text-[10px] text-gray-400 mt-0.5">ID Transacción: {venta.id}</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {sePuedeDevolver && (
             <button 
-              onClick={() => setConfirmOpen(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-200 rounded-xl text-sm font-medium text-amber-600 hover:bg-amber-100 transition-all  active:scale-95"
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium  hover:bg-amber-600 transition-all"
             >
-              <RotateCcw size={14} strokeWidth={3} /> Procesar Devolución
+              <RotateCcw size={14} /> Procesar Devolución
             </button>
           )}
           <button 
             onClick={() => window.print()}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all "
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all "
           >
-            <Printer size={14} /> Imprimir 
+            <Printer size={14} /> Imprimir
           </button>
         </div>
       </div>
 
-      {/* Métricas de la Venta */}
+      {/* Métricas estilo Inventario */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-[10px] font-semibold text-gray-400 tracking-wider mb-1">Estado</p>
-          {esCancelada && (
-            <span className="text-sm font-semibold text-red-500 flex items-center gap-1">
-              <XCircle size={14} /> ANULADA
-            </span>
-          )}
-          {esDevuelta && (
-            <span className="text-sm font-semibold text-amber-500 flex items-center gap-1">
-              <RotateCcw size={14} /> DEVUELTA
-            </span>
-          )}
-          {venta.estado === 'COMPLETADA' && (
-            <span className="text-sm font-semibold text-green-600 flex items-center gap-1">
-              <CheckCircle2 size={14} /> COMPLETADA
-            </span>
-          )}
+        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <p className="text-xs text-gray-400 mb-1">Total Diseños</p>
+          <p className="text-2xl font-semibold text-gray-800">{metrics.totalItems}</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-[10px] font-semibold text-gray-400  tracking-wider mb-1">Fecha de Venta</p>
-          <p className="text-sm font-semibold text-gray-600">{new Date(venta.fecha).toLocaleDateString()}</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <p className="text-xs text-gray-400 mb-1">Unidades Vendidas</p>
+          <p className="text-2xl font-semibold text-blue-600">{metrics.unidadesVendidas}</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-[10px] font-semibold text-gray-400  tracking-wider mb-1">Sucursal</p>
-          <p className="text-sm font-semibold text-gray-600">{venta.sucursales?.nombre}</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <div className="flex items-center gap-1.5 mb-1 text-amber-500">
+            <TrendingDown size={12} />
+            <p className="text-xs text-gray-400">Devoluciones</p>
+          </div>
+          <p className="text-2xl font-semibold text-amber-500">{metrics.unidadesDevueltas}</p>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-4">
-          <p className="text-[10px] font-semibold text-gray-400 tracking-wider mb-1">Total Cobrado</p>
-          <p className="text-xl font-bold text-gray-600">${Number(venta.total).toFixed(2)}</p>
+        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+          <div className="flex items-center gap-1.5 mb-1 text-green-500">
+            <ShoppingCart size={12} />
+            <p className="text-xs text-gray-400">Total Venta</p>
+          </div>
+          <p className="text-2xl font-semibold text-gray-800">${metrics.totalVenta}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2">
-          <div className={`bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden ${esDevuelta ? 'opacity-60 grayscale-[0.5]' : ''}`}>
-            <div className="px-5 py-4 border-b border-gray-100 bg-gray-50/50">
-              <h2 className="text-[10px] font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2">
-                <Package size={14} /> Artículos en Comprobante
-              </h2>
-            </div>
-            <table className="min-w-full divide-y divide-gray-200 bg-white">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-[10px] font-bold text-gray-400 uppercase tracking-wider">Diseño / Producto</th>
-                  <th className="px-4 py-3 text-center text-[10px] font-bold text-gray-400 uppercase tracking-wider">Cant.</th>
-                  <th className="px-4 py-3 text-right text-[10px] font-bold text-gray-400 uppercase tracking-wider">P. Unit</th>
-                  <th className="px-4 py-3 text-right text-[10px] font-bold text-gray-400 uppercase tracking-wider">Subtotal</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200">
-                {venta.detalle_ventas.map((detalle, idx) => (
-                  <tr key={idx} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 border border-gray-100 shrink-0">
-                          {(detalle.disenos as any)?.imagen ? (
-                            <img src={(detalle.disenos as any).imagen} className="w-full h-full object-cover" alt="prod" />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center">
-                              <Package size={16} className="text-gray-300" />
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm font-medium text-gray-700">
-                            {detalle.disenos?.nombre || detalle.nodos?.nombre || 'Producto'}
-                          </p>
-                          <p className="text-[10px] text-gray-400 font-mono">
-                            {detalle.disenos?.codigo || 'STOCK_GLOBAL'}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 text-center text-sm font-semibold text-gray-600">
-                      {detalle.cantidad}
-                    </td>
-                    <td className="px-4 py-3 text-right text-sm text-gray-500">
-                      ${Number(detalle.precio_unitario).toFixed(2)}
-                    </td>
-                    <td className="px-4 py-3 text-right text-sm font-bold text-gray-800">
-                      ${(Number(detalle.cantidad) * Number(detalle.precio_unitario)).toFixed(2)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {esDevuelta && (
-              <div className="bg-amber-50 p-4 border-t border-amber-100 flex items-center justify-center gap-2">
-                <AlertTriangle size={16} className="text-amber-500" />
-                <p className="text-xs font-bold text-amber-700 uppercase tracking-tight">Venta Devuelta: El stock de estos artículos ha sido retornado al inventario.</p>
-              </div>
-            )}
+      {/* Info de la Venta (Vendedor, Sucursal, Fecha) */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-full">
+          <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white">
+            <User size={12} />
+          </div>
+          <div className="flex flex-col leading-none">
+            <span className="text-[9px] font-medium text-blue-400 uppercase tracking-tighter">Vendedor</span>
+            <span className="text-xs font-semibold text-blue-700 uppercase">{venta.usuarios?.nombre}</span>
           </div>
         </div>
 
-        {/* Info Lateral */}
-        <div className="space-y-4">
-          <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-            <h2 className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-              <Info size={14} className="text-blue-500" /> Detalle Administrativo
-            </h2>
-            
-            <div className="space-y-3">
-              <div className="flex justify-between items-start">
-                <span className="text-xs text-gray-400">Vendedor:</span>
-                <span className="text-xs font-semibold text-gray-700">{venta.usuarios?.nombre || 'Administrador'}</span>
-              </div>
-              <div className="flex justify-between items-start">
-                <span className="text-xs text-gray-400">ID Interno:</span>
-                <span className="text-xs font-mono text-blue-600">TX-00{venta.id}</span>
-              </div>
-              <div className="pt-3 border-t border-gray-100 mt-3">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-xs text-gray-500">Subtotal 0%</span>
-                  <span className="text-sm font-medium text-gray-700">${Number(venta.total).toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between items-center mb-4">
-                  <span className="text-xs text-gray-500">IVA 0%</span>
-                  <span className="text-sm font-medium text-gray-700">$0.00</span>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg border border-gray-100">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-bold text-gray-400 uppercase">Total Final</span>
-                    <span className={`text-xl font-bold ${esDevuelta ? 'text-amber-600' : 'text-gray-900'}`}>
-                      ${Number(venta.total).toFixed(2)}
-                    </span>
+        <div className="flex items-center font-medium gap-2 px-4 py-1.5 bg-gray-50 border border-gray-300 rounded-full text-gray-500">
+          <Store size={16} />
+          <span className="text-xs ">{venta.sucursales?.nombre}</span>
+        </div>
+
+        <div className="flex items-center font-medium gap-2 px-4 py-1.5 bg-gray-50 border border-gray-300 rounded-full text-gray-500">
+          <Calendar size={16} />
+          <span className="text-xs ">{new Date(venta.fecha).toLocaleDateString('es-EC')}</span>
+        </div>
+      </div>
+
+      {/* Tabla estilo Movimientos */}
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm bg-white">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              <th className="px-4 py-3 text-left text-[10px] font-medium text-gray-400 uppercase tracking-wider">Producto / Detalle</th>
+              <th className="px-4 py-3 text-center text-[10px] font-medium text-gray-400 uppercase tracking-wider">Vendidos</th>
+              <th className="px-4 py-3 text-center text-[10px] font-medium text-gray-400 uppercase tracking-wider">Devueltos</th>
+              <th className="px-4 py-3 text-right text-[10px] font-medium text-gray-400 uppercase tracking-wider">P. Unitario</th>
+              <th className="px-4 py-3 text-right text-[10px] font-medium text-gray-400 uppercase tracking-wider">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {venta.detalle_ventas.map((detalle) => (
+              <tr key={detalle.id} className="hover:bg-gray-50 transition-colors">
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-md bg-gray-100 overflow-hidden border border-gray-200 shrink-0">
+                      <img
+                        src={getImageUrl(detalle.disenos?.imagen || detalle.nodos?.imagen)}
+                        className="w-full h-full object-cover"
+                        alt="prod"
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="text-xs text-gray-700 font-medium">{detalle.disenos?.nombre || detalle.nodos?.nombre}</span>
+                      <span className="text-[9px] text-gray-400 font-bold uppercase">
+                        {detalle.diseno_id ? 'Personalizado' : 'Stock Global'}
+                      </span>
+                    </div>
                   </div>
+                </td>
+                <td className="px-4 py-3 text-center">
+                  <span className="text-sm font-bold text-gray-800">{detalle.cantidad}</span>
+                </td>
+                <td className="px-4 py-3 text-center">
+                  {detalle.cantidad_devuelta ? (
+                    <span className="inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded bg-red-100 text-red-600 uppercase">
+                      <RotateCcw size={10} /> {detalle.cantidad_devuelta}
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-gray-300 font-medium uppercase">—</span>
+                  )}
+                </td>
+                <td className="px-4 py-3 text-right text-xs text-gray-500 font-medium">
+                  ${Number(detalle.precio_unitario).toFixed(2)}
+                </td>
+                <td className="px-4 py-3 text-right">
+                  <span className="text-sm font-bold text-gray-900">
+                    ${(Number(detalle.cantidad) * Number(detalle.precio_unitario)).toFixed(2)}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+          {/* Footer de Tabla para Estados estilo Movimientos */}
+          <tfoot className="bg-gray-50/50">
+            <tr>
+              <td colSpan={5} className="px-4 py-3 text-right">
+                <div className="flex items-center justify-end gap-2">
+                   <span className="text-[10px] font-medium text-gray-400 uppercase">Estado Venta:</span>
+                   {venta.estado === 'COMPLETADA' && (
+                     <span className="inline-flex items-center gap-1 text-[10px] font-bold text-green-600 uppercase">
+                        <CheckCircle2 size={12} /> Completada
+                     </span>
+                   )}
+                   {venta.estado === 'CANCELADA' && (
+                     <span className="inline-flex items-center gap-1 text-[10px] font-bold text-red-600 uppercase">
+                        <XCircle size={12} /> Cancelada
+                     </span>
+                   )}
+                   {venta.estado === 'PARCIALMENTE_DEVUELTA' && (
+                     <span className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-500 uppercase">
+                        <Clock size={12} /> Parcial
+                     </span>
+                   )}
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-blue-50/50 rounded-xl border border-blue-100 p-4">
-            <p className="text-[10px] font-bold text-blue-600 uppercase mb-2 flex items-center gap-2">
-              <Hash size={12} /> Referencia Digital
-            </p>
-            <p className="text-[10px] font-mono text-blue-400 break-all leading-relaxed">
-              ELITEX-INV-{venta.id}-{new Date(venta.fecha).getTime()}
-            </p>
-          </div>
-        </div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
 
-      <ConfirmAlert 
-        isOpen={confirmOpen}
-        title="¿Procesar Devolución?"
-        message="Se cambiará el estado a DEVUELTA y los artículos volverán al inventario. Esta acción no se puede deshacer."
-        onConfirm={handleDevolucion}
-        onCancel={() => setConfirmOpen(false)}
+      <DevolucionModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={submitDevolucion}
+        venta={venta}
+        itemsADevolver={itemsADevolver}
+        onInputChange={handleInputChange}
+        saving={isSaving}
       />
     </div>
   )

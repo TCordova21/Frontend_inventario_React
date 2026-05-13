@@ -21,7 +21,6 @@ const Ventas = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   //Roles
-
   const { usuario } = useAuth()
   const esAdmin = usuario?.rol === 'ADMIN'
   const esVendedor = usuario?.rol === 'VENDEDOR'
@@ -105,15 +104,15 @@ const Ventas = () => {
             <button onClick={() => setViewMode('LOCALES')} className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium transition-all ${viewMode === 'LOCALES' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500'}`}><MapPin size={14} /> Por Local</button>
           </div>
         )}
-            {esVendedor && (
-          <div className="flex  p-1 rounded-xl w-fit">
+        {esVendedor && (
+          <div className="flex p-1 rounded-xl w-fit">
             {usuario?.rol === 'VENDEDOR' && usuario?.nombre_sucursal && (
               <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-full">
                 <div className="flex items-center justify-center w-7 h-7 bg-blue-500 rounded-full shrink-0">
                   <Store size={16} className="text-white" />
                 </div>
                 <div className="flex flex-col leading-tight pr-1">
-                  <span className="text-[9px] font-medium text-blue-400  tracking-tight leading-none">
+                  <span className="text-[9px] font-medium text-blue-400 tracking-tight leading-none">
                     Sucursal
                   </span>
                   <span className="text-sm font-semibold text-blue-700 truncate max-w-30 sm:max-w-50">
@@ -126,11 +125,8 @@ const Ventas = () => {
         )}
       </div>
 
-
-
       {/* Selector Local */}
-      {viewMode === 'LOCALES' &&  esAdmin && (
-        
+      {viewMode === 'LOCALES' && esAdmin && (
         <div className="mb-6 animate-in fade-in slide-in-from-top-2">
           <div className="flex flex-wrap gap-2">
             {listaLocales.map((s) => (
@@ -191,6 +187,7 @@ const Ventas = () => {
           filtradas.map((v) => {
             const esCancelada = v.estado === 'CANCELADA'
             const esDevuelta = v.estado === 'DEVUELTA'
+            const esParcial = v.estado === 'PARCIALMENTE_DEVUELTA'
 
             return (
               <div
@@ -203,7 +200,8 @@ const Ventas = () => {
                     <span className="text-[10px] font-black bg-gray-100 text-gray-500 px-2 py-1 rounded-md w-fit">#{v.id}</span>
                     <div className="flex gap-1">
                       {esCancelada && <span className="text-[8px] font-black bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md uppercase">Cancelada</span>}
-                      {esDevuelta && <span className="text-[8px] font-black bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded-md uppercase">Devuelta</span>}
+                      {esDevuelta && <span className="text-[8px] font-black bg-red-100 text-red-600 px-1.5 py-0.5 rounded-md uppercase">Devuelta</span>}
+                      {esParcial && <span className="text-[8px] font-black bg-amber-100 text-amber-600 px-1.5 py-0.5 rounded-md uppercase">Parcial</span>}
                       {v.estado === 'COMPLETADA' && <span className="text-[8px] font-black bg-green-100 text-green-600 px-1.5 py-0.5 rounded-md uppercase">Completada</span>}
                     </div>
                   </div>
