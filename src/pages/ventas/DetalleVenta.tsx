@@ -105,7 +105,7 @@ const DetalleVenta = () => {
               onClick={() => setIsModalOpen(true)}
               className="flex items-center gap-2 px-4 py-2 bg-amber-500 text-white rounded-lg text-sm font-medium  hover:bg-amber-600 transition-all"
             >
-              <RotateCcw size={14} /> Procesar Devolución
+              <RotateCcw size={14} /> Devolución
             </button>
           )}
           <button 
